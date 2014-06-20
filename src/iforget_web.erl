@@ -28,7 +28,6 @@ loop(Req, DocRoot) ->
                     "hello" ->
                       QueryStringData = Req:parse_qs(),
                       Username = proplists:get_value("username", QueryStringData, "Anonymous"),
-                      timer:seconds(1),
                       Req:respond({200, [{"Content-Type", "text/plain"}],
                           "Hello " ++ Username ++ "!\n"});
                     _ ->
@@ -36,6 +35,17 @@ loop(Req, DocRoot) ->
                 end;
             'POST' ->
                 case Path of
+                    "message" ->
+                      QueryStringData = Req:parse_qs(),
+                      Text = proplists:get_value("text", QueryStringData),
+
+                      {ok, C} = eredis:start_link(),
+                      QueryStringData = Req:parse_qs(),
+                      {ok, Messageid} = eredis:q(C, ["incr", "messages"]),
+                      {ok, <<"OK">>} = eredis:q(C, ["SET", "message:"++Messageid, proplists:get_value("bar", QueryStringData)]),
+                      %%io:format("", QueryStringData),
+                      Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"});
+
                     _ ->
 
                       {ok, C} = eredis:start_link(),
