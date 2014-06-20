@@ -1,11 +1,11 @@
-PROJECT=reminder
-DESCRIPTION="Reminder daemon writer application"
+PROJECT=iforget
+DESCRIPTION="iforget daemon writer application"
 DEPS=lager mochiweb
 
 all: compile run
 
 run:
-	ERL_LIBS=deps erl -pa ebin -s reminder
+	ERL_LIBS=deps erl -pa ebin -s iforget
 
 compile:
 	./rebar compile
