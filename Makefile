@@ -5,7 +5,7 @@ DEPS=lager mochiweb
 all: compile run
 
 run:
-	ERL_LIBS=deps erl -pa ebin -s iforget
+	ERL_LIBS=deps erl -pa ebin edit deps/*/ebin -boot start_sasl -s iforget -s reloader
 
 compile:
 	./rebar compile
