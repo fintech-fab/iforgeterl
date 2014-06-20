@@ -1,0 +1,12 @@
+{application, iforget,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { iforget_app, []}},
+  {env, []}
+ ]}.
