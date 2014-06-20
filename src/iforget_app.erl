@@ -10,6 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+    iforget_deps:ensure(),
     iforget_sup:start_link().
 
 stop(_State) ->

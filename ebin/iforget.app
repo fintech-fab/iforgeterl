@@ -1,0 +1,9 @@
+{application,iforget,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{iforget_app,[]}},
+              {env,[]},
+              {modules,[iforget,iforget_app,iforget_deps,iforget_sup,
+                        iforget_web]}]}.
