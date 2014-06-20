@@ -23,14 +23,10 @@ loop(Req, DocRoot) ->
     "/" ++ Path = Req:get(path),
     try
         case Req:get(method) of
-            Method when Method =:= 'GET'; Method =:= 'HEAD' ->
+            'GET' ->
                 case Path of
-                    "hello" ->
-                      QueryStringData = Req:parse_qs(),
-                      Username = proplists:get_value("username", QueryStringData, "Anonymous"),
-                      timer:seconds(1),
-                      Req:respond({200, [{"Content-Type", "text/plain"}],
-                          "Hello " ++ Username ++ "!\n"});
+                    "api/" ++ ApiMethod ->
+                      rest_handler:handle({get,ApiMethod,Req});
                     _ ->
                         Req:serve_file(Path, DocRoot)
                 end;
@@ -45,7 +41,7 @@ loop(Req, DocRoot) ->
                       Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"})
                 end;
             _ ->
-                Req:respond({501, [], []})
+                Req:respond({400, [], []})
         end
     catch
         Type:What ->
