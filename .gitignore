@@ -1,2 +1,4 @@
 deps/*
 .idea
+ebin/*
+reminder.iml
