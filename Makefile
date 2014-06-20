@@ -1,5 +1,5 @@
-PROJECT=cometLoader
-DESCRIPTION="Comet loader application"
+PROJECT=reminder
+DESCRIPTION="Reminder daemon writer application"
 DEPS=lager mochiweb
 
 all: compile run
