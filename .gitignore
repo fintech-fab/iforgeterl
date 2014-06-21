@@ -2,3 +2,4 @@ deps/*
 .idea
 ebin/*
 reminder.iml
+erl_crash.dump

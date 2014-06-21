@@ -24,10 +24,13 @@ ensure_started(App) ->
 %% @doc Start the mochiwebapp server.
 start() ->
   ensure_started(crypto),
-  application:start(iforget).
+  ensure_started(eredis),
+  ensure_started(iforget).
 
 
 %% @spec stop() -> ok
 %% @doc Stop the mochiwebapp server.
 stop() ->
-  application:stop(iforget).
+  application:stop(iforget),
+  application:stop(eredis),
+  application:stop(crypto).

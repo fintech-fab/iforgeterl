@@ -32,28 +32,12 @@ loop(Req, DocRoot) ->
                 end;
 
             'POST' ->
-                case Path of
-                    "message" ->
-                      QueryStringData = Req:parse_qs(),
-                      Text = proplists:get_value("text", QueryStringData),
-
-                      {ok, C} = eredis:start_link(),
-                      QueryStringData = Req:parse_qs(),
-                      {ok, Messageid} = eredis:q(C, ["incr", "messages"]),
-                      {ok, <<"OK">>} = eredis:q(C, ["SET", "message:"++Messageid, proplists:get_value("bar", QueryStringData)]),
-                      %%io:format("", QueryStringData),
-                      Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"});
-
-                    _ ->
-
-                      {ok, C} = eredis:start_link(),
-                      QueryStringData = Req:parse_qs(),
-                      {ok, <<"OK">>} = eredis:q(C, ["SET", "foo", proplists:get_value("foo", QueryStringData, "test")]),
-                      %%io:format("", QueryStringData),
-                      Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"})
-                end;
+              case Path of
+                "api/" ++ ApiMethod ->
+                  rest_handler:handle({post,ApiMethod,Req})
+              end;
             _ ->
-                Req:respond({501, [], []})
+                header:send({error,Req})
         end
     catch
         Type:What ->
@@ -63,8 +47,7 @@ loop(Req, DocRoot) ->
                       {trace, erlang:get_stacktrace()}],
             error_logger:error_report(Report),
             %% NOTE: mustache templates need \ because they are not awesome.
-            Req:respond({500, [{"Content-Type", "text/plain"}],
-                         "request failed, sorry\n"})
+            header:send({error,Req})
     end.
 
 %% Internal API
