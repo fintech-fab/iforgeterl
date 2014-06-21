@@ -7,6 +7,8 @@
 
 -export([start/1, stop/0, loop/2]).
 
+-import(render, [render_ok/3]).
+
 
 %% External API
 
@@ -31,10 +33,7 @@ loop(Req, DocRoot) ->
                     "" ->
                         QueryStringData = Req:parse_qs(),
                         Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),
-                        {ok, HTMLOutput} = send_form_dtl:render([{datetime, Username}]),
-                        Req:respond({200, [{"Content-Type", "text/html"}],
-                            HTMLOutput});
-
+                        render_ok(Req, send_form_dtl, [{datetime, Username}]);
                     _ ->
                         Req:serve_file(Path, DocRoot)
                 end;

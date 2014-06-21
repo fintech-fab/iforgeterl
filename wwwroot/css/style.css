@@ -1,0 +1,27 @@
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    background-color: #ff9;
+}
+
+.navbar-default {
+    background-color: #FFF;
+    /* background-color: #FFB; */
+    border-color: #FF6;
+}
+
+body {
+    background-color: #FF9;
+}
+
+a:hover, a:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+a {
+    color: #777;
+    text-decoration: none;
+}
+
+.jumbotron {
+    background-color: #dfb;
+}
