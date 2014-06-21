@@ -31,6 +31,9 @@ add({user, Username, Email, Phone}) ->
 get({user, Uuid}) ->
     Command="HGETALL",
     Key="user:" ++ Uuid,
-    {ok, Value} = redis:call({send_redis,{Command,Key}}),
-    Value.
+    redis:call({send_redis,{Command,Key}}).
+
+
+
+
 

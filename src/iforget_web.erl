@@ -42,7 +42,14 @@ loop(Req, DocRoot) ->
                     "api/" ++ ApiMethod ->
                         rest_handler:handle({post, ApiMethod, Req});
                     _ ->
-                      header:send({error,Req})
+                        header:send({error,Req})
+                end;
+            'DELETE' ->
+                case Path of
+                    "api/" ++ ApiMethod ->
+                        rest_handler:handle({delete, ApiMethod, Req});
+                    _ ->
+                        header:send({error,Req})
                 end
           end
     catch

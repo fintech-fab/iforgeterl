@@ -13,34 +13,41 @@
 -export([start/0, call/1]).
 -export([loop/1]).
 
-start()->
+start() ->
     {ok, RedisConnection} = eredis:start_link(),
     Pid = spawn(redis, loop, [RedisConnection]),
     erlang:register(?SERVER, Pid).
 
-call({send_redis,{Command,Key}})->
-    ?SERVER ! {send_redis, {Command,Key}};
-
-call({send_redis,{Command,Key, Attributes}})->
-    ?SERVER ! {send_redis, {Command,Key,Attributes}}.
-
-
-loop(RedisConnection)->
+call({send_redis, {Command, Key}}) ->
+    ?SERVER ! {send_redis, {self, self()}, {Command, Key}},
     receive
-        {send_redis,{Command,Key}} ->
-            eredis:q(RedisConnection, [Command, Key]),
-            loop(RedisConnection);
-        {send_redis,{Command,Key,Attributes}} ->
-            eredis:q(RedisConnection, [Command, Key | Attributes]),
-            loop(RedisConnection);
-        Oops ->
-            io:write(Oops)
+        Response ->
+            Response
+    end;
 
+call({send_redis, {Command, Key, Attributes}}) ->
+    ?SERVER ! {send_redis, {self, self()}, {Command, Key, Attributes}},
+    receive
+        Response ->
+            Response
     end.
 
 
 
-
+loop(RedisConnection) ->
+    receive
+        {send_redis, {self, Pid}, {Command, Key}} ->
+            io:write(Command),
+            Value = eredis:q(RedisConnection, [Command, Key]),
+            Pid ! Value,
+            loop(RedisConnection);
+        {send_redis, {self, Pid}, {Command, Key, Attributes}} ->
+            Value = eredis:q(RedisConnection, [Command, Key | Attributes]),
+            Pid ! Value,
+            loop(RedisConnection);
+        Oops ->
+            io:write(Oops)
+    end.
 
 
 %%
