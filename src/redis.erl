@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(redis).
 -author("b00ris").
--define(SERVER, redis).
+-define(SERVER, iredis).
 %% API
 -export([start/0, call/1]).
 -export([loop/1]).
@@ -37,7 +37,6 @@ call({send_redis, {Command, Key, Attributes}}) ->
 loop(RedisConnection) ->
     receive
         {send_redis, {self, Pid}, {Command, Key}} ->
-            io:write(Command),
             Value = eredis:q(RedisConnection, [Command, Key]),
             Pid ! Value,
             loop(RedisConnection);

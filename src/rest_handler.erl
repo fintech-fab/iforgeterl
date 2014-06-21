@@ -28,8 +28,8 @@ handle({get, "notice/" ++ NoticeUuid, Req}) ->
     });
 
 handle({get, "user/" ++ Uuid, Req}) ->
-    user:get({user, Uuid}),
-    User =1,
+
+    User =user:get({user, Uuid}),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
