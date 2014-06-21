@@ -17,6 +17,7 @@ start(Options) ->
     Loop = fun(Req) ->
         ?MODULE:loop(Req, DocRoot)
     end,
+    redis:start(),
     mochiweb_http:start([{name, ?MODULE}, {loop, Loop} | Options1]).
 
 stop() ->

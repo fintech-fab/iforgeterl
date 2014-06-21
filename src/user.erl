@@ -32,29 +32,29 @@ get({user, Uuid}) ->
     Command="HGETALL",
     Key="user:" ++ Uuid,
     {ok, Value} = redis:call({send_redis,{Command,Key}}),
-    io:write(Value),
+%%     io:write(Value),
     Value.
-
-
-
-
 
 auth(Username, Password) ->
     {ok, RedisConnection} = eredis:start_link(),
 
     [
-        <<"name">>, Name,
-        <<"phone">>, Phone,
-        <<"email">>, Email,
+        <<"name">>, _,
+        <<"phone">>, _,
+        <<"email">>, _,
         <<"pwd">>, Pwd
     ] = get({user, Username}),
 
-    Hash = list_to_binary(Password),
+    Hash = getPasswordHash(lists:flatten(Password)),
+    PasswordList = binary_to_list(Pwd),
 
-    case Pwd of
+    case PasswordList of
         Hash ->
             true;
         _ ->
             false
     end.
 
+getPasswordHash(Password) ->
+    Hash = helpers:md5(Password),
+    Hash.
