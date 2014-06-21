@@ -36,8 +36,7 @@ handle({get, "message/list", Req}) ->
     });
 
 handle({get, "user/" ++ Uuid, Req}) ->
-    {ok, RedisConnection} = eredis:start_link(),
-    User = user:get(RedisConnection, {user, Uuid}),
+    User = user:get({user, Uuid}),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -46,13 +45,12 @@ handle({get, "user/" ++ Uuid, Req}) ->
 
 handle({post, "user", Req}) ->
     PostData = Req:parse_post(),
-    {ok, RedisConnection} = eredis:start_link(),
 
     Username = proplists:get_value("username", PostData),
     Email = proplists:get_value("email", PostData),
     Phone = proplists:get_value("phone", PostData),
 
-    Uuid = user:add(RedisConnection, {
+    Uuid = user:add({
         user,
         Username,
         Email,
@@ -65,7 +63,7 @@ handle({post, "user", Req}) ->
     });
 
 
-handle({post, ApiMethod, Req}) ->
+handle({post, _ApiMethod, Req}) ->
     QueryStringData = Req:parse_qs(),
     Text = proplists:get_value("text", QueryStringData, "tets"),
     {ok, RedisConnection} = eredis:start_link(),
