@@ -11,6 +11,7 @@
 
 %% API
 -compile(export_all).
+-compile({no_auto_import,[get/1]}).
 
 
 add({user, Username, Email, Phone}) ->
@@ -48,7 +49,7 @@ auth(Username, Password) ->
         <<"phone">>, Phone,
         <<"email">>, Email,
         <<"pwd">>, Pwd
-    ] = get(RedisConnection, {user, Username}),
+    ] = get({user, Username}),
 
     Hash = list_to_binary(Password),
 

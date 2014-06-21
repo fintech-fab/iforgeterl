@@ -15,8 +15,6 @@
 -import(render, [render_ok/2]).
 
 handle({get, "", Req}) ->
-    %% TODO Cоздание коннекта к базе вынести
-    {ok, RedisConnection} = eredis:start_link(),
     render_ok(Req, auth_dtl);
 
 handle({post, "auth", Req}) ->
