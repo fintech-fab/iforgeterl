@@ -28,8 +28,9 @@ loop(Req, DocRoot) ->
                     "api/" ++ ApiMethod ->
                       rest_handler:handle({get,ApiMethod,Req});
                     _ ->
-                        Req:serve_file(Path, DocRoot)
+                      Req:serve_file(Path, DocRoot,[{"Content-Type:", " text/html; charset=utf-8"}])
                 end;
+
             'POST' ->
                 case Path of
                     "message" ->
