@@ -70,6 +70,14 @@ handle({post, "notice/", Req}) ->
         mochijson2:encode([{ok,ok}, {notice_uuid, NoticeUuid}])
     });
 
+handle({delete, "notice/" ++ NoticeUuid, Req}) ->
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode(notice:remove({notice_uuid,NoticeUuid}))
+    });
+
+
 handle({_, _, Req}) ->
     Req:respond({
         404,
