@@ -1,0 +1,14 @@
+<form method="POST" action="/user/auth">
+
+    <div>
+        <label for="login">Логин</label>
+        <input type="text" id="login" name="login" value=""/>
+    </div>
+
+    <div>
+        <label for="password">Пароль</label>
+        <input type="text" id="password" name="password" value=""/>
+    </div>
+
+    <input type="submit" value="Вход"/>
+</form>
