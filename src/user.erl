@@ -40,3 +40,22 @@ get({user, Uuid}) ->
 
 
 
+auth(Username, Password) ->
+    {ok, RedisConnection} = eredis:start_link(),
+
+    [
+        <<"name">>, Name,
+        <<"phone">>, Phone,
+        <<"email">>, Email,
+        <<"pwd">>, Pwd
+    ] = get(RedisConnection, {user, Username}),
+
+    Hash = list_to_binary(Password),
+
+    case Pwd of
+        Hash ->
+            true;
+        _ ->
+            false
+    end.
+

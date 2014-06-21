@@ -30,6 +30,8 @@ loop(Req, DocRoot) ->
                 case Path of
                     "api/" ++ ApiMethod ->
                         rest_handler:handle({get, ApiMethod, Req});
+                    "user/" ++ Method ->
+                        auth_handler:handle({get, Method, Req});
                     "" ->
                         QueryStringData = Req:parse_qs(),
                         Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),
@@ -41,6 +43,8 @@ loop(Req, DocRoot) ->
                 case Path of
                     "api/" ++ ApiMethod ->
                         rest_handler:handle({post, ApiMethod, Req});
+                    "user/" ++ Method ->
+                        auth_handler:handle({post, Method, Req});
                     _ ->
                         header:send({error,Req})
                 end;
