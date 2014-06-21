@@ -48,9 +48,9 @@ get_all() ->
     {ok, Keys} = eredis:q(RedisConnection, ["KEYS", ?PREFIX ++ "*"]),
     get_notices_by_keys(Keys).
 
-remove({notice_uuid, <<Uuid>>}) ->
+remove({notice_uuid, Uuid}) ->
     {ok, RedisConnection} = eredis:start_link(),
-    {ok, <<"OK">>} = eredis:q(RedisConnection, ["DEL", ?PREFIX ++ binary_to_list(Uuid)]),
+    {ok, <<"1">>} = eredis:q(RedisConnection, ["DEL", ?PREFIX ++ Uuid]),
     ok.
 
 get_notices_by_keys([Key | Keys]) ->
