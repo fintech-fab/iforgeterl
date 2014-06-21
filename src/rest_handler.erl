@@ -12,15 +12,53 @@
 %% API
 -export([handle/1]).
 
-handle({get,ApiMethod,Req}) ->
-  Req:respond({
-      200,
-      [{"Content-Type", "application/json"}],
-      mochijson2:encode([{<<"test">>,list_to_binary(ApiMethod)},{<<"test">>,list_to_binary(ApiMethod)}])
-  });
-handle({post,ApiMethod,Req}) ->
-  Req:respond({
-    200,
-    [{"Content-Type", "application/json"}],
-    mochijson2:encode([{<<"test">>,list_to_binary(ApiMethod)},{<<"test">>,list_to_binary(ApiMethod)}])
-  }).
+handle({get, "message/", Req}) ->
+    {ok, RedisConnection} = eredis:start_link(),
+    QueryStringData = Req:parse_qs(),
+    MessageUuid = proplists:get_value("uuid", QueryStringData),
+
+    {ok, Value} = eredis:q(RedisConnection, ["GET", "message:" ++ MessageUuid]),
+
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"message">>, Value}, {<<"uuid">>, list_to_binary(MessageUuid)}])
+    });
+
+handle({get, "message/list", Req}) ->
+    {ok, RedisConnection} = eredis:start_link(),
+    {ok, Keys} = eredis:q(RedisConnection, ["KEYS" | ["message:*"]]),
+
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode(getMessages(RedisConnection, Keys))
+    });
+
+handle({post, ApiMethod, Req}) ->
+    QueryStringData = Req:parse_qs(),
+    Text = proplists:get_value("text", QueryStringData, "tets"),
+    {ok, RedisConnection} = eredis:start_link(),
+    MessageUuid = uuid:to_string(uuid:uuid4()),
+    {ok, <<"OK">>} = eredis:q(RedisConnection, ["SET", "message:" ++ MessageUuid, Text]),
+
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"uuid">>, MessageUuid}])
+    });
+
+handle({get, _ApiMethod, Req}) ->
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"error">>, <<"unknown method">>}])
+    }).
+
+getMessages(_, []) ->
+    [];
+getMessages(RedisConnection, [H | T]) ->
+    {ok, Message} = eredis:q(RedisConnection, ["GET", H]),
+        "message:" ++ Uuid = H,
+    [{Uuid, Message} | getMessages(RedisConnection, T)].
+
