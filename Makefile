@@ -2,7 +2,7 @@ PROJECT=iforget
 DESCRIPTION="iforget daemon writer application"
 DEPS=lager mochiweb
 
-all: compile run
+all: deps compile run
 
 run:
 	ERL_LIBS=deps erl -pa ebin edit deps/*/ebin -boot start_sasl -s iforget -s reloader

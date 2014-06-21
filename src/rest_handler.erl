@@ -13,9 +13,14 @@
 -export([handle/1]).
 
 handle({get,ApiMethod,Req}) ->
-  Req:respond({200, [{"Content-Type", "text/plain"}],
-    "Hello get !\n"});
-
+  Req:respond({
+      200,
+      [{"Content-Type", "application/json"}],
+      mochijson2:encode([{<<"test">>,list_to_binary(ApiMethod)},{<<"test">>,list_to_binary(ApiMethod)}])
+  });
 handle({post,ApiMethod,Req}) ->
-  Req:respond({200, [{"Content-Type", "text/plain"}],
-    "Hello post !\n"}).
+  Req:respond({
+    200,
+    [{"Content-Type", "application/json"}],
+    mochijson2:encode([{<<"test">>,list_to_binary(ApiMethod)},{<<"test">>,list_to_binary(ApiMethod)}])
+  }).

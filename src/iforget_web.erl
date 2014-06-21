@@ -32,7 +32,11 @@ loop(Req, DocRoot) ->
                 end;
             'POST' ->
                 case Path of
-                    "api/message" ->
+                %%                "api/" ++ ApiMethod ->
+%%                  rest_handler:handle({post,ApiMethod,Req})
+%%              end;
+
+                  "api/message" ->
                       QueryStringData = Req:parse_qs(),
                       Text = proplists:get_value("text", QueryStringData,"tets"),
                       {ok, C} = eredis:start_link(),
@@ -42,15 +46,9 @@ loop(Req, DocRoot) ->
                       Req:respond({200, [{"Content-Type", "text/plain"}],"ok"});
 
                     _ ->
-                      {ok, C} = eredis:start_link(),
-                      QueryStringData = Req:parse_qs(),
-                      {ok, <<"OK">>} = eredis:q(C, ["SET", "foo", proplists:get_value("foo", QueryStringData, "test")]),
-                      %%io:format("", QueryStringData),
-                      Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"})
-                end;
-            _ ->
-                Req:respond({501, [], []})
-        end
+                      header:send({error,Req})
+                end
+          end
     catch
         Type:What ->
             Report = ["web request failed",
@@ -59,8 +57,7 @@ loop(Req, DocRoot) ->
                       {trace, erlang:get_stacktrace()}],
             error_logger:error_report(Report),
             %% NOTE: mustache templates need \ because they are not awesome.
-            Req:respond({500, [{"Content-Type", "text/plain"}],
-                         "request failed, sorry\n"})
+            header:send({error,Req})
     end.
 
 %% Internal API

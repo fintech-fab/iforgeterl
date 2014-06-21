@@ -4,3 +4,4 @@ ebin/*
 reminder.iml
 iforgeterl.iml
 erl_crash.dump
+*.orig
