@@ -7,6 +7,7 @@
 
 -export([start/1, stop/0, loop/2]).
 
+
 %% External API
 
 start(Options) ->
@@ -27,6 +28,13 @@ loop(Req, DocRoot) ->
                 case Path of
                     "api/" ++ ApiMethod ->
                         rest_handler:handle({get, ApiMethod, Req});
+                    "" ->
+                        QueryStringData = Req:parse_qs(),
+                        Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),
+                        {ok, HTMLOutput} = send_form_dtl:render([{datetime, Username}]),
+                        Req:respond({200, [{"Content-Type", "text/html"}],
+                            HTMLOutput});
+
                     _ ->
                         Req:serve_file(Path, DocRoot)
                 end;
