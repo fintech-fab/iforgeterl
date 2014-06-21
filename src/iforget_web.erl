@@ -32,19 +32,16 @@ loop(Req, DocRoot) ->
                 end;
             'POST' ->
                 case Path of
-                    "message" ->
+                    "api/message" ->
                       QueryStringData = Req:parse_qs(),
-                      Text = proplists:get_value("text", QueryStringData),
-
+                      Text = proplists:get_value("text", QueryStringData,"tets"),
                       {ok, C} = eredis:start_link(),
-                      QueryStringData = Req:parse_qs(),
-                      {ok, Messageid} = eredis:q(C, ["incr", "messages"]),
-                      {ok, <<"OK">>} = eredis:q(C, ["SET", "message:"++Messageid, proplists:get_value("bar", QueryStringData)]),
-                      %%io:format("", QueryStringData),
-                      Req:respond({200, [{"Content-Type", "text/plain"}],"Hi"});
+                      MessageUuid = uuid:to_string(uuid:uuid4()),
+                      {ok, <<"OK">>} = eredis:q(C, ["SET", "message:"++MessageUuid,Text ]),
+
+                      Req:respond({200, [{"Content-Type", "text/plain"}],"ok"});
 
                     _ ->
-
                       {ok, C} = eredis:start_link(),
                       QueryStringData = Req:parse_qs(),
                       {ok, <<"OK">>} = eredis:q(C, ["SET", "foo", proplists:get_value("foo", QueryStringData, "test")]),

@@ -6,4 +6,4 @@
               {mod,{iforget_app,[]}},
               {env,[]},
               {modules,[iforget,iforget_app,iforget_deps,iforget_sup,
-                        iforget_web]}]}.
+                        iforget_web,rest_handler]}]}.
