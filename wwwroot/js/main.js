@@ -20,3 +20,16 @@ function signup(form) {
     );
     return false;
 }
+
+function send_notice() {
+    $.post("/api/noitce/",
+        {
+            notice: $('#notice').val(),
+            group: $('#reciever').val(),
+            datetime: $('#datepick').val()
+        },
+        function (data) {
+            window.location = '/';
+        }
+    );
+}

@@ -6,7 +6,7 @@
         <div class="panel-body">
             <div class="col-lg-7">
                 <div class="input-group input-message">
-                    <textarea class="form-control notice-text"
+                    <textarea id="notice" class="form-control notice-text"
                               placeholder="Введите сюда текст Вашего напоминания"></textarea>
                 </div>
                 <br>
@@ -21,7 +21,7 @@
             <div class="col-lg-5">
                 <div class="input-group">
                     <span class="input-group-addon">@</span>
-                    <input class="form-control" placeholder="Кому отправить?" type="text">
+                    <input id="reciver" class="form-control" placeholder="Кому отправить?" type="text">
                 </div>
                 <br>
 
@@ -57,7 +57,7 @@
                 </script>
 
                 <div align="right">
-                    <a href="#" class="btn btn-md btn-warning btn-block" role="button">Отправить</a>
+                    <a href="#" class="btn btn-md btn-warning btn-block" role="button" onclick="send_notice();">Отправить</a>
                 </div>
             </div>
         </div>
