@@ -44,16 +44,16 @@
             <br>
 
 
-            <div class="col-lg-3">
+            <div class="col-lg-{{ leftsize }}">
             </div>
 
-            <div class="col-lg-6">
-                {% autoescape off %}
+            <div class="col-lg-{{ mainsize }}">
+            {% autoescape off %}
                 {{ content }}
                 {% endautoescape %}
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-{{ rightsize }}">
             </div>
         </div>
     </div>
