@@ -7,7 +7,7 @@
 render_ok(Req, TemplateModule, Params) ->
 
     {ok, Output} = TemplateModule:render(Params),
-    {ok, Layout} = layout_dtl:render([{content, Output}], [{auto_escape, nil}]),
+    {ok, Layout} = layout_dtl:render([{content, Output}, {leftsize, 1}, {rightsize, 1}, {mainsize, 10}], [{auto_escape, nil}]),
     % Here we use mochiweb_request:ok/1 to render a reponse
     Req:ok({"text/html", Layout}).
 
