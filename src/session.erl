@@ -26,15 +26,8 @@ start({user, User}) ->
     UserUuid.
 
 
-%%
-%%     UserUuid = uuid:to_string(uuid:uuid4()),
-%%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
-
-
-
-get({user, Uuid}) ->
+get({session, Uuid}) ->
     Command = "HGETALL",
-    Key = "user:" ++ Uuid,
+    Key = "session:" ++ Uuid,
     {ok, Value} = redis:call({send_redis, {Command, Key}}),
-%%     io:write(Value),
     Value.

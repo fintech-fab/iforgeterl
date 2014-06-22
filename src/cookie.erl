@@ -31,7 +31,7 @@ set(Key, Value) ->
             lists:append(NewCookies, OriginCookies)
     end,
 
-    lists:append(NewCookies, [Cookie]),
-    erlang:put(cookies, NewCookies),
+    ResultCookies = [Cookie | NewCookies],
+    erlang:put(cookies, ResultCookies),
 
     Cookie.

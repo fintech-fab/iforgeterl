@@ -25,6 +25,8 @@ stop() ->
 loop(Req, DocRoot) ->
         "/" ++ Path = Req:get(path),
     try
+        auth:auth(Req),
+
         case Req:get(method) of
             'GET' ->
                 case Path of
