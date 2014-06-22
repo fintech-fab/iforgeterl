@@ -27,6 +27,44 @@ handle({get, "notice/" ++ NoticeUuid, Req}) ->
         mochijson2:encode(notice:get({notice_uuid,NoticeUuid}))
     });
 
+handle({get, "group/"++Uuid, Req}) ->
+    Group =  groups:get(Uuid),
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode(Group)
+    });
+
+handle({post, "group/add/"++Uuid, Req}) ->
+    PostData = Req:parse_post(),
+    Username = proplists:get_value("username", PostData),
+    groups:add({group, Username},Uuid),
+    Group=groups:get(Uuid),
+    io:write(Group),
+
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"uuid">>, Group}])
+    });
+
+handle({post, "group", Req}) ->
+    PostData = Req:parse_post(),
+
+    Name = proplists:get_value("name", PostData),
+    Username = proplists:get_value("username", PostData),
+
+    Author = "user:"++Username,
+
+    Uuid = groups:create({group, Name,Author}),
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"group">>, list_to_binary(Uuid)}])
+    });
+
+
+
 
 handle({get, "user/address/" ++ Uuid, Req}) ->
 

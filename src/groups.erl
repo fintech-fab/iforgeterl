@@ -15,16 +15,25 @@
 
 create({group, Name,Author})->
     Command = "HMSET",
-    Uuid=1,
+    Uuid= uuid:to_string(uuid:uuid4()),
     Key = "group:"++Uuid,
     Attributes = [Name,Author],
-    Value =  redis:call({send_redis,{Command,Key,Attributes}}),
+    redis:call({send_redis,{Command,Key,Attributes}}),
+    Uuid.
+
+add({group, User},Uuid)->
+    Command = "SADD",
+    Key = "group:"++Uuid++":members",
+    Attributes = [User],
+    {ok, Value}=  redis:call({send_redis,{Command,Key,Attributes}}),
     Value.
 
-add({group, Name,Author},Uuid)->
-    Command = "SADD",
-    Uuid=1,
+get(Uuid)->
+    Command = "HGETALL",
     Key = "group:"++Uuid,
-    Attributes = [Name,Author],
-    Value =  redis:call({send_redis,{Command,Key,Attributes}}),
-    Value.
+    {ok, Value}=  redis:call({send_redis,{Command,Key}}),
+
+    Command2 ="SMEMBERS",
+    Key2 = "group:"++Uuid++":members",
+    {ok, Members}=  redis:call({send_redis,{Command2,Key2}}),
+    [{info,Value},{members,Members}].
