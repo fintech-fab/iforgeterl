@@ -10,7 +10,7 @@
 -author("mart").
 
 %% API
--export([send/1, redirect/2]).
+-export([send/1, redirect/2, json/2]).
 
 send({ok, Req}) ->
 
@@ -22,6 +22,10 @@ send({error, Req}) ->
 send({not_find, Req}) ->
     Req:respond({200, [{"Content-Type", "text/plain"}],
         "Hello get !\n"}).
+
+json({ok, Req}, Data) ->
+    Headers = getHeaders("application/json"),
+    Req:respond({200, Headers, mochijson2:encode([{<<"uuid">>, list_to_binary(Data)}])}).
 
 redirect(Req, Url) ->
     Headers = getHeaders(),
@@ -37,4 +41,18 @@ getHeaders() ->
         _ ->
             lists:append(Headers, Cookies)
     end.
+
+getHeaders(ContentType) ->
+    Headers = [{"Content-Type", ContentType}],
+
+    Cookies = erlang:get(cookies),
+    case Cookies of
+        undefined ->
+            Headers;
+        _ ->
+            lists:append(Headers, Cookies)
+    end.
+
+
+
 

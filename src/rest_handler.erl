@@ -68,17 +68,14 @@ handle({post, "user", Req}) ->
     Username = proplists:get_value("username", PostData),
     Password = proplists:get_value("password", PostData),
 
-
     Uuid = user:add({
         user,
         Username,
         Password
     }),
-    Req:respond({
-        200,
-        [{"Content-Type", "application/json"}],
-        mochijson2:encode([{<<"uuid">>, list_to_binary(Uuid)}])
-    });
+
+    auth:login(Username),
+    header:json({ok, Req}, Uuid);
 
 handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),
