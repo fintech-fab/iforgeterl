@@ -129,12 +129,22 @@ handle({post, "user", Req}) ->
 handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),
     %% [{"datetime",Datetime},{"group",Group,{"notice",Text}] = QueryStringData,
-
     Text = proplists:get_value("notice", QueryStringData),
     Datetime = proplists:get_value("datetime", QueryStringData),
     Group = proplists:get_value("group", QueryStringData),
 
-    [NoticeUuid, NoticesUuid] = notice:add({notice, Group, Datetime, Text}),
+%%     Username = erlang:get(user),
+    Username = 312321,
+    GroupName = "default",
+    GroupUid = groups:create({group,GroupName,Username}),
+    Emails = string:tokens(Group,","),
+    lists:foreach(fun(H)->
+        Email = user:add({user,H,""}),
+        groups:add({group,Email},GroupUid)
+    end, Emails),
+
+
+    [NoticeUuid, NoticesUuid] = notice:add({notice, GroupUid, Datetime, Text}),
 
     Req:respond({
         200,
