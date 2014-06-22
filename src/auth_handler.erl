@@ -31,6 +31,7 @@ handle({post, "auth", Req}) ->
             auth:login(Username),
             header:redirect(Req, "/");
         false ->
+%%             render_ok(Req, auth_dtl, [{username, Username}, {leftzise: 3}, {rightsize:3}, {mainsize:6}])
             render_ok(Req, auth_dtl, [{username, Username}])
     end;
 
