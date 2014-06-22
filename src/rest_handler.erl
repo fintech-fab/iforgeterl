@@ -123,7 +123,7 @@ handle({post, "user", Req}) ->
             user:set_address({address, Username, <<"">>}, Uuid),
             auth:login(Username),
             header:json({ok, Req}, Uuid)
-    end.
+    end;
 
 
 handle({post, "notice/", Req}) ->
