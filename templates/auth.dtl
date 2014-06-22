@@ -2,7 +2,7 @@
 
     <div>
         <label for="login">Логин</label>
-        <input type="text" id="login" name="login" value=""/>
+        <input type="text" id="login" name="login" value="{{ username }}"/>
     </div>
 
     <div>
