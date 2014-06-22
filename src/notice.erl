@@ -21,7 +21,8 @@ add({notice,Group, Datetime, Text}) ->
     Author = "default",
     Attributes = ["group", Group, "message", Text, "datetime", Datetime, "author", Author],
     redis:call({send_redis,{Command,Key,Attributes}}),
-    list_to_binary(NoticeUuid).
+    NoticesUuid = notices:add({notices,Key}),
+    [list_to_binary(NoticeUuid),list_to_binary(NoticesUuid)].
 
 get({notice_uuid, Uuid}) ->
     Command="HGETALL",
@@ -47,6 +48,9 @@ get({notice_uuid, Uuid}) ->
 get_all() ->
     {ok, Keys} = redis:call({send_redis,{"KEYS", ?PREFIX ++ "*"}}),
     get_notices_by_keys(Keys).
+
+key({notice_uuid, Uuid}) ->
+    ?PREFIX ++ Uuid.
 
 remove({notice_uuid, Uuid}) ->
     {ok, <<"1">>} = redis:call({send_redis,{"DEL", ?PREFIX ++ Uuid}}),

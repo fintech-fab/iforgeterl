@@ -15,6 +15,9 @@ full: deps compile
 deps:
 	./rebar get-deps
 
+cleandeps:
+	rm -rf deps/*
+
 clean:
 	./rebar clean skip_deps=true
 

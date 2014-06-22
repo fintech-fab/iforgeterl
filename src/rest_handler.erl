@@ -123,12 +123,12 @@ handle({post, "notice/", Req}) ->
     Datetime = proplists:get_value("datetime",QueryStringData),
     Group = proplists:get_value("group",QueryStringData),
 
-    NoticeUuid = notice:add({notice, Group, Datetime, Text}),
+    [NoticeUuid, NoticesUuid] = notice:add({notice, Group, Datetime, Text}),
 
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
-        mochijson2:encode([{ok,ok}, {notice_uuid, NoticeUuid}])
+        mochijson2:encode([{ok,ok}, {notice_uuid, NoticeUuid},{notices_uuid, NoticesUuid}])
     });
 
 handle({delete, "notice/" ++ NoticeUuid, Req}) ->
