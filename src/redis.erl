@@ -10,7 +10,7 @@
 -author("b00ris").
 -define(SERVER, iredis).
 %% API
--export([start/0, call/1]).
+-export([start/0, call/1, exist_key/1]).
 -export([loop/1]).
 
 start() ->

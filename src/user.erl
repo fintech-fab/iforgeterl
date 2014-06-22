@@ -18,11 +18,19 @@ add({user, Username, Password}) ->
     Command = "HMSET",
 %%     UserUuid = uuid:to_string(uuid:uuid4()),
     Key = "user:" ++ Username,
-%%         UserUuid,
-    Attributes = ["username", Username, "password", Password],
-    redis:call({send_redis, {Command, Key, Attributes}}),
-%%     UserUuid.
-    Username.
+
+    Exists = redis:exist_key(Key),
+        io:write("fsdfsdf"),
+        io:write(Exists),
+    case Exists of
+        <<49>>->
+            [];
+         _->
+            Attributes = ["username", Username, "password", getPasswordHash(Password)],
+            redis:call({send_redis, {Command, Key, Attributes}}),
+            Username
+    end.
+
 %%
 %%     UserUuid = uuid:to_string(uuid:uuid4()),
 %%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),

@@ -52,11 +52,12 @@ handle({post, "group", Req}) ->
     PostData = Req:parse_post(),
 
     Name = proplists:get_value("name", PostData),
-    Username = proplists:get_value("username", PostData),
+%%     Username = proplists:get_value("username", PostData),
 
+    Username = erlang:get(user),
     Author = "user:" ++ Username,
-
     Uuid = groups:create({group, Name, Author}),
+
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -111,6 +112,9 @@ handle({post, "user", Req}) ->
         Username,
         Password
     }),
+
+    user:set_address({address, Username, <<"">>}, Uuid),
+
 
     auth:login(Username),
     header:json({ok, Req}, Uuid);
