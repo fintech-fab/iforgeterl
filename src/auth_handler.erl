@@ -25,10 +25,8 @@ handle({post, "auth", Req}) ->
 
     case user:auth(Username, Password) of
         true ->
-            Session = session:start({user, Username}),
-            Cookie = cookie:set("sess", Session),
-
-            Req:respond({301, [Cookie, {"Location", "/"}], ""});
+            auth:login(Username),
+            header:redirect(Req, "/");
         false ->
             render_ok(Req, auth_dtl, [{username, Username}])
     end;
@@ -41,5 +39,3 @@ handle({_, _, Req}) ->
     }).
 
 
-%%     Session = Req:get_cookie("sess"),
-%%     Req:ok("ssss");

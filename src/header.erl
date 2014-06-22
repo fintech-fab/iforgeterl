@@ -25,8 +25,7 @@ send({not_find, Req}) ->
 
 redirect(Req, Url) ->
     Headers = getHeaders(),
-    lists:append(Headers, [{"Location", Url}]),
-    Req:respond({301, Headers, ""}).
+    Req:respond({301, lists:append(Headers, [{"Location", Url}]), ""}).
 
 getHeaders() ->
     Headers = [{"Content-Type", "text/plain"}],
@@ -34,10 +33,8 @@ getHeaders() ->
     Cookies = erlang:get(cookies),
     case Cookies of
         undefined ->
-            void;
+            Headers;
         _ ->
             lists:append(Headers, Cookies)
-    end,
-
-    Headers.
+    end.
 
