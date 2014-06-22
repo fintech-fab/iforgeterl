@@ -12,12 +12,16 @@
     <!-- Bootstrap -->
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/datepicker.css" rel="stylesheet">
+    <link href="/css/datapicker3.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/bootstrap-timepicker.css" rel="stylesheet">
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/datepicker.js"></script>
+<script src="/js/bootstrap-datepicker.js"></script>
+<script src="/js/bootstrap-timepicker.js"></script>
 <script src="/js/main.js"></script>
 <div class="inbody">
     <div class="navbar navbar-default navbar-static-top" role="navigation">
