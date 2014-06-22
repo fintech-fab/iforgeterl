@@ -15,7 +15,6 @@
 
 
 add({user, Username, Email, Phone}) ->
-    redis:start(),
     Command="HMSET",
     UserUuid = uuid:to_string(uuid:uuid4()),
     Key="user:" ++ UserUuid,
@@ -30,7 +29,6 @@ add({user, Username, Email, Phone}) ->
 
 
 get({user, Uuid}) ->
-    redis:start(),
     Command="HGETALL",
     Key="user:" ++ Uuid,
     {ok, Value} = redis:call({send_redis,{Command,Key}}),

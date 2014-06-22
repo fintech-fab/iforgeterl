@@ -24,7 +24,8 @@ ensure_started(App) ->
 %% @doc Start the mochiwebapp server.
 start() ->
     ensure_started(crypto),
-    ensure_started(iforget).
+    ensure_started(iforget),
+    redis:start().
 
 
 %% @spec stop() -> ok

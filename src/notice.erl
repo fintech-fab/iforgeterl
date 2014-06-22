@@ -14,17 +14,18 @@
 -define(PREFIX, "notice:").
 
 add({notice,Group, Datetime, Text}) ->
-    {ok, RedisConnection} = eredis:start_link(),
+    Command="HMSET",
     NoticeUuid = uuid:to_string(uuid:uuid4()),
+    Key=?PREFIX ++ NoticeUuid,
+
     Author = "default",
-    {ok, <<"OK">>} = eredis:q(
-        RedisConnection,
-        ["HMSET", ?PREFIX ++ NoticeUuid, "group", Group, "message", Text, "datetime", Datetime, "author", Author]
-    ),
+    Attributes = ["group", Group, "message", Text, "datetime", Datetime, "author", Author],
+    redis:call({send_redis,{Command,Key,Attributes}}),
     list_to_binary(NoticeUuid).
 
 get({notice_uuid, Uuid}) ->
-    {ok, RedisConnection} = eredis:start_link(),
+    Command="HGETALL",
+
     {
         ok,
         [
@@ -33,7 +34,7 @@ get({notice_uuid, Uuid}) ->
             <<"datetime">>, Datetime,
             <<"author">>, Author
         ]
-    } = eredis:q(RedisConnection, ["HGETALL", ?PREFIX ++ Uuid]),
+    } = redis:call({send_redis,{Command,?PREFIX ++ Uuid}}),
 
     [
         {<<"uuid">>, list_to_binary(Uuid)},
@@ -44,13 +45,11 @@ get({notice_uuid, Uuid}) ->
     ].
 
 get_all() ->
-    {ok, RedisConnection} = eredis:start_link(),
-    {ok, Keys} = eredis:q(RedisConnection, ["KEYS", ?PREFIX ++ "*"]),
+    {ok, Keys} = redis:call({send_redis,{"KEYS", ?PREFIX ++ "*"}}),
     get_notices_by_keys(Keys).
 
 remove({notice_uuid, Uuid}) ->
-    {ok, RedisConnection} = eredis:start_link(),
-    {ok, <<"1">>} = eredis:q(RedisConnection, ["DEL", ?PREFIX ++ Uuid]),
+    {ok, <<"1">>} = redis:call({send_redis,{"DEL", ?PREFIX ++ Uuid}}),
     ok.
 
 get_notices_by_keys([Key | Keys]) ->
