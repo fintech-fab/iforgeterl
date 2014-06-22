@@ -9,12 +9,12 @@ function signup(form) {
             password: form['password'].value
         },
         function (data) {
-            console.log(data);
 
-            if (data.ui)
-                form.onsubmit = function () {
-                    return signup(form);
-                };
+            form.onsubmit = function () {
+                return signup(form);
+            };
+
+            window.location = '/';
         }
     );
     return false;
