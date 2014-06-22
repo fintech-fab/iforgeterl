@@ -36,8 +36,6 @@ get({user, Uuid}) ->
     Value.
 
 auth(Username, Password) ->
-    {ok, RedisConnection} = eredis:start_link(),
-
     [
         <<"name">>, _,
         <<"phone">>, _,

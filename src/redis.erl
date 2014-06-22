@@ -15,7 +15,7 @@
 
 start() ->
     {ok, RedisConnection} = eredis:start_link(),
-    Pid = spawn(redis, loop, [RedisConnection]),
+    Pid = spawn_link(redis, loop, [RedisConnection]),
     erlang:register(?SERVER, Pid).
 
 call({send_redis, {Command, Key}}) ->
