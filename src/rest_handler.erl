@@ -114,12 +114,17 @@ handle({post, "user", Req}) ->
     }),
     case Uuid of
         []->
-            void;
+            Req:respond({
+                200,
+                [{"Content-Type", "application/json"}],
+                []
+            });
         _->
             user:set_address({address, Username, <<"">>}, Uuid),
-            auth:login(Username)
-    end,
-    header:json({ok, Req}, Uuid);
+            auth:login(Username),
+            header:json({ok, Req}, Uuid)
+    end.
+
 
 handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),
