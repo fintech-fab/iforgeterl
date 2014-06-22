@@ -27,6 +27,29 @@ handle({get, "notice/" ++ NoticeUuid, Req}) ->
         mochijson2:encode(notice:get({notice_uuid,NoticeUuid}))
     });
 
+
+handle({get, "user/address/" ++ Uuid, Req}) ->
+
+    User =user:get_address(Uuid),
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"user">>, list_to_binary(User)}])
+    });
+handle({post, "user/address/" ++ Uuid, Req}) ->
+    PostData = Req:parse_post(),
+    Email= proplists:get_value("email", PostData),
+    Phone = proplists:get_value("phone", PostData),
+
+    User =user:set_address({address,Email,Phone},Uuid),
+
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"user">>, list_to_binary(User)}])
+    });
+
+
 handle({get, "user/" ++ Uuid, Req}) ->
 
     User =user:get({user, Uuid}),
@@ -36,17 +59,20 @@ handle({get, "user/" ++ Uuid, Req}) ->
         mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"user">>, User}])
     });
 
+
+
+
 handle({post, "user", Req}) ->
     PostData = Req:parse_post(),
+
     Username = proplists:get_value("username", PostData),
-    Email = proplists:get_value("email", PostData),
-    Phone = proplists:get_value("phone", PostData),
+    Password = proplists:get_value("password", PostData),
+
 
     Uuid = user:add({
         user,
         Username,
-        Email,
-        Phone
+        Password
     }),
     Req:respond({
         200,

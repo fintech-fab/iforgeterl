@@ -11,39 +11,47 @@
 
 %% API
 -compile(export_all).
--compile({no_auto_import,[get/1]}).
 
 
-add({user, Username, Email, Phone}) ->
-    Command="HMSET",
+add({user, Username, Password}) ->
+    Command = "HMSET",
     UserUuid = uuid:to_string(uuid:uuid4()),
-    Key="user:" ++ UserUuid,
-    Attributes = ["username", Username, "email", Email, "phone", Phone],
-    redis:call({send_redis,{Command,Key,Attributes}}),
+    Key = "user:" ++ UserUuid,
+    Attributes = ["username", Username, "password", Password],
+    redis:call({send_redis, {Command, Key, Attributes}}),
     UserUuid.
 
 %%
 %%     UserUuid = uuid:to_string(uuid:uuid4()),
 %%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
 
+set_address({address, Email,Phone}, Uuid) ->
+    Command = "HMSET",
+    Key = "user:" ++ Uuid ++ ":address",
+    redis:call({send_redis, {Command, Key,["email", Email, "phone", Phone]}}),
+    Uuid.
 
+get_address(Uuid) ->
+    Command = "HGETALL",
+    Key = "user:" ++ Uuid ++ ":address",
+
+    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    Value.
+%%     {address,Email,Phone}.
 
 get({user, Uuid}) ->
-    Command="HGETALL",
-    Key="user:" ++ Uuid,
-    {ok, Value} = redis:call({send_redis,{Command,Key}}),
-%%     io:write(Value),
+    Command = "HGETALL",
+    Key = "user:" ++ Uuid,
+    {ok, Value} = redis:call({send_redis, {Command, Key}}),
     Value.
 
 auth(Username, Password) ->
-    {ok, RedisConnection} = eredis:start_link(),
-
     [
         <<"name">>, _,
         <<"phone">>, _,
         <<"email">>, _,
         <<"pwd">>, Pwd
-    ] = get({user, Username}),
+    ] = ?MODULE:get({user, Username}),
 
     Hash = getPasswordHash(lists:flatten(Password)),
     PasswordList = binary_to_list(Pwd),
