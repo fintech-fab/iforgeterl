@@ -17,7 +17,7 @@
 handle({get, "", Req}) ->
     render_ok(Req, auth_dtl);
 
-handle({get, "signup", Req}) ->
+handle({get, "signup/", Req}) ->
     render_ok(Req, signup_dtl);
 
 handle({post, "auth", Req}) ->
