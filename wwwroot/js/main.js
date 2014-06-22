@@ -13,7 +13,9 @@ function signup(form) {
                 return signup(form);
             };
 
-            window.location = '/';
+            if (data.uuid != undefined) {
+                window.location = '/';
+            }
         }
     );
     return false;
