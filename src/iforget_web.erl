@@ -23,7 +23,7 @@ stop() ->
     mochiweb_http:stop(?MODULE).
 
 loop(Req, DocRoot) ->
-    "/" ++ Path = Req:get(path),
+        "/" ++ Path = Req:get(path),
     try
         case Req:get(method) of
             'GET' ->
@@ -46,25 +46,25 @@ loop(Req, DocRoot) ->
                     "user/" ++ Method ->
                         auth_handler:handle({post, Method, Req});
                     _ ->
-                        header:send({error,Req})
+                        header:send({error, Req})
                 end;
             'DELETE' ->
                 case Path of
                     "api/" ++ ApiMethod ->
                         rest_handler:handle({delete, ApiMethod, Req});
                     _ ->
-                        header:send({error,Req})
+                        header:send({error, Req})
                 end
-          end
+        end
     catch
         Type:What ->
             Report = ["web request failed",
-                      {path, Path},
-                      {type, Type}, {what, What},
-                      {trace, erlang:get_stacktrace()}],
+                {path, Path},
+                {type, Type}, {what, What},
+                {trace, erlang:get_stacktrace()}],
             error_logger:error_report(Report),
             %% NOTE: mustache templates need \ because they are not awesome.
-            header:send({error,Req})
+            header:send({error, Req})
     end.
 
 %% Internal API

@@ -12,7 +12,7 @@
 %% API
 -export([handle/1]).
 
--import(render, [render_ok/2]).
+-import(render, [render_ok/2, render_ok/3]).
 
 handle({get, "", Req}) ->
     render_ok(Req, auth_dtl);
@@ -25,9 +25,12 @@ handle({post, "auth", Req}) ->
 
     case user:auth(Username, Password) of
         true ->
-            Req:ok({"text/html", "OK"});
+            Session = session:start({user, Username}),
+            Cookie = cookie:set("sess", Session),
+
+            Req:respond({301, [Cookie, {"Location", "/"}], ""});
         false ->
-            Req:ok({"text/html", "false"})
+            render_ok(Req, auth_dtl, [{username, Username}])
     end;
 
 handle({_, _, Req}) ->

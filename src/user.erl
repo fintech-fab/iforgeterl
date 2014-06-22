@@ -11,6 +11,7 @@
 
 %% API
 -compile(export_all).
+-compile({no_auto_import,[get/1]}).
 
 
 add({user, Username, Password}) ->
@@ -46,21 +47,31 @@ get({user, Uuid}) ->
     Value.
 
 auth(Username, Password) ->
-    [
-        <<"name">>, _,
-        <<"phone">>, _,
-        <<"email">>, _,
-        <<"pwd">>, Pwd
-    ] = ?MODULE:get({user, Username}),
 
-    Hash = getPasswordHash(lists:flatten(Password)),
-    PasswordList = binary_to_list(Pwd),
+    User = get({user, Username}),
 
-    case PasswordList of
-        Hash ->
-            true;
+    case User of
+
+        [] ->
+            false;
         _ ->
-            false
+
+            [
+                <<"name">>, _,
+                <<"phone">>, _,
+                <<"email">>, _,
+                <<"pwd">>, Pwd
+            ] = User,
+
+            Hash = getPasswordHash(lists:flatten(Password)),
+            PasswordList = binary_to_list(Pwd),
+
+            case PasswordList of
+                Hash ->
+                    true;
+                _ ->
+                    false
+            end
     end.
 
 getPasswordHash(Password) ->
