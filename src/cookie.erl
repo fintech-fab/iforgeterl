@@ -20,4 +20,18 @@ get(Req, Key, Default) ->
     end.
 
 set(Key, Value) ->
-    mochiweb_cookies:cookie(Key, Value, [{path, "/"}]).
+    Cookie = mochiweb_cookies:cookie(Key, Value, [{path, "/"}]),
+    OriginCookies = erlang:get(cookies),
+
+    NewCookies = [],
+    case OriginCookies of
+        undefined ->
+            void;
+        _ ->
+            lists:append(NewCookies, OriginCookies)
+    end,
+
+    lists:append(NewCookies, [Cookie]),
+    erlang:put(cookies, NewCookies),
+
+    Cookie.
