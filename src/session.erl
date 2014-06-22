@@ -11,16 +11,30 @@
 
 %% API
 -compile(export_all).
+-compile({no_auto_import, [get/1]}).
 
 %% API
 -export([]).
 
-add(RedisConnection, {user, Username, Email, Phone}) ->
+
+start({user, User}) ->
+    Command = "HMSET",
     UserUuid = uuid:to_string(uuid:uuid4()),
-    {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET" | ["user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]]),
+    Key = "session:" ++ UserUuid,
+    Attributes = ["user", User],
+    redis:call({send_redis, {Command, Key, Attributes}}),
     UserUuid.
 
 
-get(RedisConnection, {user, Uuid}) ->
-    {ok, Value} = eredis:q(RedisConnection, ["HGETALL", "user:" ++ Uuid]),
+%%
+%%     UserUuid = uuid:to_string(uuid:uuid4()),
+%%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
+
+
+
+get({user, Uuid}) ->
+    Command = "HGETALL",
+    Key = "user:" ++ Uuid,
+    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+%%     io:write(Value),
     Value.

@@ -10,10 +10,14 @@
 -author("topas").
 
 %% API
--export([]).
+%% -compile({no_auto_import,[get/3, set/1]}).
+-export([get/3, set/2]).
 
-get_cookie_value(Req, Key, Default) ->
+get(Req, Key, Default) ->
     case Req:get_cookie_value(Key) of
         undefined -> Default;
         Value -> Value
     end.
+
+set(Key, Value) ->
+    mochiweb_cookies:cookie(Key, Value, [{path, "/"}]).

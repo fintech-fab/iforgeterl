@@ -30,6 +30,10 @@ label {
     display: block;
 }
 
+label.error {
+    color: red;
+}
+
 input {
     margin-bottom: 10px;
 }

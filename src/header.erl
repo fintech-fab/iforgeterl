@@ -10,7 +10,7 @@
 -author("mart").
 
 %% API
--export([send/1]).
+-export([send/1, redirect/2]).
 
 send({ok,Req}) ->
   Req:respond({200, [{"Content-Type", "text/plain"}],
@@ -21,3 +21,6 @@ send({error,Req}) ->
 send({not_find,Req}) ->
   Req:respond({200, [{"Content-Type", "text/plain"}],
     "Hello get !\n"}).
+
+redirect(Req, Url) ->
+    Req:respond({301, [{"Location", Url}], ""}).
