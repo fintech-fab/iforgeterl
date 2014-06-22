@@ -24,22 +24,22 @@ handle({get, "notice/" ++ NoticeUuid, Req}) ->
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
-        mochijson2:encode(notice:get({notice_uuid,NoticeUuid}))
+        mochijson2:encode(notice:get({notice_uuid, NoticeUuid}))
     });
 
-handle({get, "group/"++Uuid, Req}) ->
-    Group =  groups:get(Uuid),
+handle({get, "group/" ++ Uuid, Req}) ->
+    Group = groups:get(Uuid),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
         mochijson2:encode(Group)
     });
 
-handle({post, "group/add/"++Uuid, Req}) ->
+handle({post, "group/add/" ++ Uuid, Req}) ->
     PostData = Req:parse_post(),
     Username = proplists:get_value("username", PostData),
-    groups:add({group, Username},Uuid),
-    Group=groups:get(Uuid),
+    groups:add({group, Username}, Uuid),
+    Group = groups:get(Uuid),
     io:write(Group),
 
     Req:respond({
@@ -54,9 +54,9 @@ handle({post, "group", Req}) ->
     Name = proplists:get_value("name", PostData),
     Username = proplists:get_value("username", PostData),
 
-    Author = "user:"++Username,
+    Author = "user:" ++ Username,
 
-    Uuid = groups:create({group, Name,Author}),
+    Uuid = groups:create({group, Name, Author}),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -68,7 +68,7 @@ handle({post, "group", Req}) ->
 
 handle({get, "user/address/" ++ Uuid, Req}) ->
 
-    User =user:get_address(Uuid),
+    User = user:get_address(Uuid),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -76,10 +76,10 @@ handle({get, "user/address/" ++ Uuid, Req}) ->
     });
 handle({post, "user/address/" ++ Uuid, Req}) ->
     PostData = Req:parse_post(),
-    Email= proplists:get_value("email", PostData),
+    Email = proplists:get_value("email", PostData),
     Phone = proplists:get_value("phone", PostData),
 
-    User =user:set_address({address,Email,Phone},Uuid),
+    User = user:set_address({address, Email, Phone}, Uuid),
 
     Req:respond({
         200,
@@ -90,7 +90,7 @@ handle({post, "user/address/" ++ Uuid, Req}) ->
 
 handle({get, "user/" ++ Uuid, Req}) ->
 
-    User =user:get({user, Uuid}),
+    User = user:get({user, Uuid}),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -119,23 +119,23 @@ handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),
     %% [{"datetime",Datetime},{"group",Group,{"notice",Text}] = QueryStringData,
 
-    Text = proplists:get_value("notice",QueryStringData),
-    Datetime = proplists:get_value("datetime",QueryStringData),
-    Group = proplists:get_value("group",QueryStringData),
+    Text = proplists:get_value("notice", QueryStringData),
+    Datetime = proplists:get_value("datetime", QueryStringData),
+    Group = proplists:get_value("group", QueryStringData),
 
     [NoticeUuid, NoticesUuid] = notice:add({notice, Group, Datetime, Text}),
 
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
-        mochijson2:encode([{ok,ok}, {notice_uuid, NoticeUuid},{notices_uuid, NoticesUuid}])
+        mochijson2:encode([{ok, ok}, {notice_uuid, NoticeUuid}, {notices_uuid, NoticesUuid}])
     });
 
 handle({delete, "notice/" ++ NoticeUuid, Req}) ->
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
-        mochijson2:encode(notice:remove({notice_uuid,NoticeUuid}))
+        mochijson2:encode(notice:remove({notice_uuid, NoticeUuid}))
     });
 
 

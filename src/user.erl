@@ -11,25 +11,26 @@
 
 %% API
 -compile(export_all).
--compile({no_auto_import,[get/1]}).
+-compile({no_auto_import, [get/1]}).
 
 
 add({user, Username, Password}) ->
     Command = "HMSET",
-    UserUuid = uuid:to_string(uuid:uuid4()),
-    Key = "user:" ++ UserUuid,
+%%     UserUuid = uuid:to_string(uuid:uuid4()),
+    Key = "user:" ++ Username,
+%%         UserUuid,
     Attributes = ["username", Username, "password", Password],
     redis:call({send_redis, {Command, Key, Attributes}}),
-    UserUuid.
-
+%%     UserUuid.
+    Username.
 %%
 %%     UserUuid = uuid:to_string(uuid:uuid4()),
 %%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
 
-set_address({address, Email,Phone}, Uuid) ->
+set_address({address, Email, Phone}, Uuid) ->
     Command = "HMSET",
     Key = "user:" ++ Uuid ++ ":address",
-    redis:call({send_redis, {Command, Key,["email", Email, "phone", Phone]}}),
+    redis:call({send_redis, {Command, Key, ["email", Email, "phone", Phone]}}),
     Uuid.
 
 get_address(Uuid) ->

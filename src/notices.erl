@@ -13,8 +13,8 @@
 -export([add/1]).
 -define(PREFIX, "notices:").
 
-add({notices,NoticeName}) ->
+add({notices, NoticeName}) ->
     NoticesUuid = uuid:to_string(uuid:uuid4()),
     Key = ?PREFIX ++ NoticesUuid,
-    redis:call({send_redis,{"ZADD",Key,[os:timestamp(),NoticeName]}}),
+    redis:call({send_redis, {"ZADD", Key, [os:timestamp(), NoticeName]}}),
     NoticesUuid.

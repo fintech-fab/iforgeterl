@@ -32,6 +32,11 @@ call({send_redis, {Command, Key, Attributes}}) ->
             Response
     end.
 
+exist_key(Name) ->
+    Command = "EXISTS",
+    Key = Name,
+    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    Value.
 
 
 loop(RedisConnection) ->
