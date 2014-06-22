@@ -9,7 +9,6 @@ function signup(form) {
             password: form['password'].value
         },
         function (data) {
-
             form.onsubmit = function () {
                 return signup(form);
             };

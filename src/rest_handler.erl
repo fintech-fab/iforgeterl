@@ -112,11 +112,13 @@ handle({post, "user", Req}) ->
         Username,
         Password
     }),
-
-    user:set_address({address, Username, <<"">>}, Uuid),
-
-
-    auth:login(Username),
+    case Uuid of
+        []->
+            void;
+        _->
+            user:set_address({address, Username, <<"">>}, Uuid),
+            auth:login(Username)
+    end,
     header:json({ok, Req}, Uuid);
 
 handle({post, "notice/", Req}) ->

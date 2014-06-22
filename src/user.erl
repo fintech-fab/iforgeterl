@@ -20,8 +20,6 @@ add({user, Username, Password}) ->
     Key = "user:" ++ Username,
 
     Exists = redis:exist_key(Key),
-        io:write("fsdfsdf"),
-        io:write(Exists),
     case Exists of
         <<49>>->
             [];
