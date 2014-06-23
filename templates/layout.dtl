@@ -12,7 +12,7 @@
     <!-- Bootstrap -->
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/datepicker.css" rel="stylesheet">
-    <link href="/css/datapicker3.css" rel="stylesheet">
+    <link href="/css/datepicker3.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/bootstrap-timepicker.css" rel="stylesheet">
 </head>

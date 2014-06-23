@@ -22,7 +22,7 @@ function signup(form) {
 }
 
 function send_notice() {
-    $.post("/api/noitce/",
+    $.post("/api/notice/",
         {
             notice: $('#notice').val(),
             group: $('#reciever').val(),

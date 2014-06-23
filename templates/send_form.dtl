@@ -5,8 +5,7 @@
     <div class="row">
         <div class="panel-body">
             <div class="col-lg-7">
-                <div class="input-group input-message">
-                    <textarea id="notice" class="form-control notice-text"
+                <div class="input-group input-message"> <textarea id="notice" class="form-control notice-text"
                               placeholder="Введите сюда текст Вашего напоминания"></textarea>
                 </div>
                 <br>

@@ -1,58 +1,102 @@
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
     background-color: #ff9;
 }
-
 .navbar-default {
     background-color: #FFF;
     /* background-color: #FFB; */
     border-color: #FF6;
 }
-
 body {
     background-color: #fff;
+    overflow-y: scroll;
 }
-
 .inbody {
     background-color: #FF9;
 }
-
 a:hover, a:focus {
     color: #333;
     text-decoration: none;
 }
-
 a {
     color: #777;
     text-decoration: none;
 }
-
 a.orange:hover, a.orange:focus {
     color: #D58512;
     text-decoration: none;
 }
-
 a.orange {
     color: #EEA236;
     text-decoration: none;
 }
-
+a.bread-crumb:hover, a.orange:focus {
+    color: #D58512;
+    font-size: 16px;
+    text-decoration: none;
+}
+a.bread-crumb {
+    color: #EEA236;
+    font-size: 16px;
+    text-decoration: none;
+}
+.sixteenfont {
+    font-size: 16px;
+}
+.active.dark-brown {
+    color: #8A6D3B;
+}
+a.minurl {
+    font-size: 12px;
+}
 .jumbotron {
     background-color: #fe9;
 }
-
 .input-message {
     width: 100%;
 }
-
 textarea {
     resize: none;
 }
-
 textarea.notice-text {
-    height: 88px;
-}
-
+    height: 142px;
+ }
 .form-control:focus {
     border-color: #fe9;
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(237, 156, 40, 0.6);
+}
+.icon-chevron-down {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-chevron-down:before {
+    content: "\e114";
+}
+.icon-chevron-up {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-chevron-up:before {
+    content: "\e113";
+}
+.breadcrumb {
+    padding: 0px 20px;
+    margin-bottom: 0px;
+    background-color: #FCF8E3;
+    border-radius: 5px;
 }
