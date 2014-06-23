@@ -20,20 +20,21 @@
             <div class="col-lg-5">
                 <div class="input-group">
                     <span class="input-group-addon">@</span>
-                    <input id="reciver" class="form-control" placeholder="Кому отправить?" type="text">
+                    <input id="receiver" class="form-control" placeholder="Кому отправить?" type="text">
                 </div>
                 <br>
 
                 <div class="input-group date">
                     <span class="input-group-addon">Дата</span>
-                    <input id="datepick" class="form-control" placeholder="дд.мм.гггг" type="text"><span
+                    <input id="datepicker" class="form-control" placeholder="дд.мм.гггг" type="text"><span
                         class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
 
                 <br>
                 <script type="text/javascript">
-                    $('input#datepick').datepicker({
+                    $('input#datepicker').datepicker({
                         format: "dd.mm.yyyy",
+                        defaultDate: new Date(2000,01,01),
                         language: "ru",
                         orientation: "bottom auto",
                         todayHighlight: true
@@ -51,6 +52,7 @@
                     $('#timepicker').timepicker({
                         minuteStep: 5,
                         showInputs: false,
+                        timeFormat: "HH:mm",
                         disableFocus: true
                     });
                 </script>

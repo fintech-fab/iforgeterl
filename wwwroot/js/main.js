@@ -22,14 +22,33 @@ function signup(form) {
 }
 
 function send_notice() {
+    var dp = $('#datepicker').data('datepicker');
+    var tp = $('#timepicker').data('timepicker');
+
+    var time;
+
+    if (dp.getFormattedDate() == ''){
+        var dt = new Date();
+        dt.setMinutes(0);
+        dt.setHours(0);
+        dt.setSeconds(0);
+        time = dt.getTime();
+    } else {
+        time = dp.getDate().getTime();
+    }
+
+    time = time + ((tp.hour + (tp.meridian == 'PM' ? 12 : 0)) * 3600 + tp.minute * 60) * 1000;
+
     $.post("/api/notice/",
         {
             notice: $('#notice').val(),
-            group: $('#reciever').val(),
-            datetime: $('#datepick').val()
+            group: $('#receiver').val(),
+            datetime: Math.ceil(time/1000)
         },
         function (data) {
-            window.location = '/';
+            if (data.ok = "ok") {
+                alert("Напоминалка поставлена");
+            }
         }
     );
 }
