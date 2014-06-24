@@ -113,13 +113,13 @@ handle({post, "user", Req}) ->
         Password
     }),
     case Uuid of
-        []->
+        [] ->
             Req:respond({
                 200,
                 [{"Content-Type", "application/json"}],
                 []
             });
-        _->
+        _ ->
             user:set_address({address, Username, <<"">>}, Uuid),
             auth:login(Username),
             header:json({ok, Req}, Uuid)
@@ -133,16 +133,18 @@ handle({post, "notice/", Req}) ->
     Datetime = proplists:get_value("datetime", QueryStringData),
     Group = proplists:get_value("group", QueryStringData),
 
-%%     Username = erlang:get(user),
     Username = 312321,
     GroupName = "default",
-    GroupUid = groups:create({group,GroupName,Username}),
-    Emails = string:tokens(Group,","),
-    lists:foreach(fun(H)->
-        Email = user:add({user,H,""}),
-        groups:add({group,Email},GroupUid)
-    end, Emails),
+    GroupUid = groups:create({group, GroupName, Username}),
+    Emails = string:tokens(Group, ","),
 
+%%     Username = erlang:get(user),
+
+    lists:foreach(fun(H) ->
+        Email = string:strip(user:add({guest, H})),
+        user:set_address({email, Email}, Email),
+        groups:add({group, Email}, GroupUid)
+    end, Emails),
 
     [NoticeUuid, NoticesUuid] = notice:add({notice, GroupUid, Datetime, Text}),
 

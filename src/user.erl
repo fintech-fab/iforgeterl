@@ -27,6 +27,20 @@ add({user, Username, Password}) ->
             Attributes = ["username", Username, "password", getPasswordHash(Password)],
             redis:call({send_redis, {Command, Key, Attributes}}),
             Username
+    end;
+
+add({guest, Username}) ->
+    Command = "HMSET",
+    Key = "user:" ++ Username,
+
+    Exists = redis:exist_key(Key),
+    case Exists of
+        <<49>>->
+            [];
+        _->
+            Attributes = ["username", Username, "password", ""],
+            redis:call({send_redis, {Command, Key, Attributes}}),
+            Username
     end.
 
 %%
@@ -37,6 +51,18 @@ set_address({address, Email, Phone}, Uuid) ->
     Command = "HMSET",
     Key = "user:" ++ Uuid ++ ":address",
     redis:call({send_redis, {Command, Key, ["email", Email, "phone", Phone]}}),
+    Uuid;
+
+set_address({email, Email}, Uuid) ->
+    Command = "HSET",
+    Key = "user:" ++ Uuid ++ ":address",
+    redis:call({send_redis, {Command, Key, ["email", Email]}}),
+    Uuid;
+
+set_address({phone, Phone}, Uuid) ->
+    Command = "HSET",
+    Key = "user:" ++ Uuid ++ ":address",
+    redis:call({send_redis, {Command, Key, ["phone", Phone]}}),
     Uuid.
 
 get_address(Uuid) ->
