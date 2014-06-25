@@ -90,10 +90,8 @@ auth(Username, Password) ->
         _ ->
 
             [
-                <<"name">>, _,
-                <<"phone">>, _,
-                <<"email">>, _,
-                <<"pwd">>, Pwd
+                <<"username">>, _,
+                <<"password">>, Pwd
             ] = User,
 
             Hash = getPasswordHash(lists:flatten(Password)),
