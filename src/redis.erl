@@ -11,7 +11,7 @@
 -define(SERVER, iredis).
 %% API
 -export([start/0, call/1]).
--export([exist/1, hset/2,hmset/2, hgetall/2,set/2,zadd/2,smembers/2,sadd/2]).
+-export([exist/1, hset/2,hmset/2, hgetall/1, get/1,set/2,zadd/2,smembers/1,sadd/2,del/1,keys/1]).
 -export([loop/1]).
 
 start() ->
@@ -55,39 +55,49 @@ loop(RedisConnection) ->
     end.
 
 hset(Key,Attributes)->
-    Command = "HSET",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+    redis:call({send_redis, {"HSET", Key, Attributes}}).
 
 hmset(Key,Attributes)->
-    Command = "HMSET",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+    redis:call({send_redis, {"HMSET", Key, Attributes}}).
 
-hgetall(Key,Attributes)->
-    Command = "HGETALL",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+hgetall(Key)->
+    {ok,Result} = redis:call({send_redis, {"HGETALL", Key}}),
+    {ok,list_to_tagged_list(Result)}.
 
 
 set(Key,Attributes)->
-    Command = "HMSET",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+    redis:call({send_redis, {"SET", Key, Attributes}}).
+
+get(Key)->
+    redis:call({send_redis, {"GET", Key}}).
 
 zadd(Key,Attributes)->
-    Command = "ZADD",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+    redis:call({send_redis, {"ZADD", Key, Attributes}}).
 
 sadd(Key,Attributes)->
-    Command = "SADD",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+    redis:call({send_redis, {"SADD", Key, Attributes}}).
 
-smembers(Key,Attributes)->
-    Command = "SMEMBERS",
-    redis:call({send_redis, {Command, Key, Attributes}}).
+smembers(Key)->
+    redis:call({send_redis, {"SMEMBERS", Key}}).
 
-%% parse_fields([K,V|L],Acc)->
-%%     parse_fields([K,V|L],[{K,V}|Acc])
-%%     Acc.
-%% parse_fields(L)->
+keys(Key)->
+    redis:call({send_redis, {"KEYS", Key}}).
 
+del(Key)->
+    redis:call({send_redis, {"DEL", Key}}).
+
+
+
+
+%% Обработка
+list_to_tagged_list(L)->
+    list_to_tagged_list(L,[]).
+
+list_to_tagged_list([],Acc)->
+    Acc;
+
+list_to_tagged_list([K,V|L],Acc)->
+    list_to_tagged_list(L,[get_tuple(K,V)]++Acc).
 
 get_tuple(Attribute, Value)->
-    {list_to_atom(Attribute),Value}.
+    {binary_to_atom(Attribute,utf8),Value}.

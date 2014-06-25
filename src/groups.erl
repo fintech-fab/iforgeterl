@@ -14,35 +14,30 @@
 
 
 create({group, Name, Author}) ->
-    Command = "HMSET",
     Uuid = uuid:to_string(uuid:uuid4()),
     Key = "group:" ++ Uuid,
     Attributes = [Name, Author],
-    redis:call({send_redis, {Command, Key, Attributes}}),
+    redis:hmset(Key,Attributes),
     Uuid.
 
 add({group, User}, Uuid) ->
-    Command = "SADD",
     Key = "group:" ++ Uuid ++ ":members",
-    Attributes = [User],
-    {ok, Value} = redis:call({send_redis, {Command, Key, Attributes}}),
+    Attributes = ["user:"++User],
+    {ok, Value} = redis:sadd(Key,Attributes),
     Value.
 
 get(Uuid) ->
-    Command = "HGETALL",
-    Key = "group:" ++ Uuid,
-    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    KeyGroup = "group:" ++ Uuid,
+    {ok, Value} = redis:hgetall(KeyGroup),
 
-    Command2 = "SMEMBERS",
-    Key2 = "group:" ++ Uuid ++ ":members",
-    {ok, Members} = redis:call({send_redis, {Command2, Key2}}),
+    KeyMembers = "group:" ++ Uuid ++ ":members",
+    {ok, Members} = redis:smembers(KeyMembers),
     [{info, Value}, {members, Members}].
 
 parse(GroupUid, Input) ->
 
     lists:foreach(fun(H) ->
         Email = string:strip(user:add({guest, H})),
-
 
         user:set_address({email, Email}, Email),
         groups:add({group, Email}, GroupUid)

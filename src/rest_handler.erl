@@ -157,6 +157,13 @@ handle({delete, "notice/" ++ NoticeUuid, Req}) ->
 
     });
 
+handle({get, "test/" ++ Id, Req}) ->
+    Req:respond({
+        200,
+        [{"Content-Type", "application/json"}],
+        mochijson2:encode(redis:hgetall(Id))
+    });
+
 
 handle({_, _, Req}) ->
     Req:respond({

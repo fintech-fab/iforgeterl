@@ -18,16 +18,14 @@
 
 
 start({user, User}) ->
-    Command = "HMSET",
     UserUuid = uuid:to_string(uuid:uuid4()),
     Key = "session:" ++ UserUuid,
     Attributes = ["user", User],
-    redis:call({send_redis, {Command, Key, Attributes}}),
+    redis:hmset(Key,Attributes),
     UserUuid.
 
 
 get({session, Uuid}) ->
-    Command = "HGETALL",
     Key = "session:" ++ Uuid,
-    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    {ok, Value} = redis:hgetall(Key),
     Value.

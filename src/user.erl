@@ -15,42 +15,32 @@
 
 
 add({user, Username, Password}) ->
-    Command = "HMSET",
-%%     UserUuid = uuid:to_string(uuid:uuid4()),
     Key = "user:" ++ Username,
-
     Exists = redis:exist(Key),
     case Exists of
         <<49>>->
             [];
          _->
             Attributes = ["username", Username, "password", getPasswordHash(Password)],
-            redis:call({send_redis, {Command, Key, Attributes}}),
+            redis:hmset(Key,Attributes),
             Username
     end;
 
 add({guest, Username}) ->
-    Command = "HMSET",
     Key = "user:" ++ Username,
-
-    Exists = redis:exist_key(Key),
+    Exists = redis:exist(Key),
     case Exists of
         <<49>>->
-            [];
+            Username;
         _->
             Attributes = ["username", Username, "password", ""],
-            redis:call({send_redis, {Command, Key, Attributes}}),
+            redis:hmset(Key,Attributes),
             Username
     end.
 
-%%
-%%     UserUuid = uuid:to_string(uuid:uuid4()),
-%%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
-
 set_address({address, Email, Phone}, Uuid) ->
-    Command = "HMSET",
-    Key = "user:" ++ Uuid ++ ":addresses",
-    redis:call({send_redis, {Command, Key, ["email", Email, "phone", Phone]}}),
+    Key = "user:" ++ Uuid ++ ":address",
+    redis:hmset(Key,["email", Email, "phone", Phone]),
     Uuid;
 
 set_address({email, Email}, Uuid) ->
@@ -66,17 +56,13 @@ set_address({phone, Phone}, Uuid) ->
     Uuid.
 
 get_address(Uuid) ->
-    Command = "HGETALL",
-    Key = "user:" ++ Uuid ++ ":addresses",
-
-    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    Key = "user:" ++ Uuid ++ ":address",
+    {ok, Value} = redis:hgetall(Key),
     Value.
-%%     {address,Email,Phone}.
 
 get({user, Uuid}) ->
-    Command = "HGETALL",
     Key = "user:" ++ Uuid,
-    {ok, Value} = redis:call({send_redis, {Command, Key}}),
+    {ok, Value} = redis:hgetall(Key),
     Value.
 
 auth(Username, Password) ->

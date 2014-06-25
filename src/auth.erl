@@ -20,12 +20,11 @@ auth(Req) ->
             void;
         _ ->
             Session = session:get({session, Cookie}),
-
             case Session of
                 [] ->
                     void;
                 _ ->
-                    [<<"user">>, User] = Session,
+                    [{user, User}] = Session,
                     io:format("User: ~s ~n", [User]),
                     erlang:put(user, [User])
             end
