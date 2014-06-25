@@ -19,7 +19,7 @@ add({user, Username, Password}) ->
 %%     UserUuid = uuid:to_string(uuid:uuid4()),
     Key = "user:" ++ Username,
 
-    Exists = redis:exist_key(Key),
+    Exists = redis:exist(Key),
     case Exists of
         <<49>>->
             [];

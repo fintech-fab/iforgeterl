@@ -26,7 +26,6 @@ add({notice, Group, Datetime, Text}) ->
 
 get({notice_uuid, Uuid}) ->
     Command = "HGETALL",
-
     {
         ok,
         [

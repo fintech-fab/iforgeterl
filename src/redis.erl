@@ -10,7 +10,8 @@
 -author("b00ris").
 -define(SERVER, iredis).
 %% API
--export([start/0, call/1, exist_key/1]).
+-export([start/0, call/1]).
+-export([exist/1, hset/2,hmset/2, hgetall/2,set/2,zadd/2,smembers/2,sadd/2]).
 -export([loop/1]).
 
 start() ->
@@ -32,7 +33,7 @@ call({send_redis, {Command, Key, Attributes}}) ->
             Response
     end.
 
-exist_key(Name) ->
+exist(Name) ->
     Command = "EXISTS",
     Key = Name,
     {ok, Value} = redis:call({send_redis, {Command, Key}}),
@@ -53,14 +54,40 @@ loop(RedisConnection) ->
             io:write(Oops)
     end.
 
+hset(Key,Attributes)->
+    Command = "HSET",
+    redis:call({send_redis, {Command, Key, Attributes}}).
 
-%%
-%% add(RedisConnection, {user, Username, Email, Phone}) ->
-%%     UserUuid = uuid:to_string(uuid:uuid4()),
-%%     {ok, <<"OK">>} = eredis:q(RedisConnection, ["HMSET", "user:" ++ UserUuid, "username", Username, "email", Email, "phone", Phone]),
-%%     UserUuid.
-%%
-%%
-%% get(RedisConnection, {user, Uuid}) ->
-%%     {ok, Value} = eredis:q(RedisConnection, ["HGETALL", "user:" ++ Uuid]),
-%%     Value.
+hmset(Key,Attributes)->
+    Command = "HMSET",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+hgetall(Key,Attributes)->
+    Command = "HGETALL",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+
+set(Key,Attributes)->
+    Command = "HMSET",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+zadd(Key,Attributes)->
+    Command = "ZADD",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+sadd(Key,Attributes)->
+    Command = "SADD",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+smembers(Key,Attributes)->
+    Command = "SMEMBERS",
+    redis:call({send_redis, {Command, Key, Attributes}}).
+
+%% parse_fields([K,V|L],Acc)->
+%%     parse_fields([K,V|L],[{K,V}|Acc])
+%%     Acc.
+%% parse_fields(L)->
+
+
+get_tuple(Attribute, Value)->
+    {list_to_atom(Attribute),Value}.
