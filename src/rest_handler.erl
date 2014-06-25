@@ -154,6 +154,7 @@ handle({delete, "notice/" ++ NoticeUuid, Req}) ->
         200,
         [{"Content-Type", "application/json"}],
         mochijson2:encode(notice:remove({notice_uuid, NoticeUuid}))
+
     });
 
 
