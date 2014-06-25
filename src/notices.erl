@@ -11,7 +11,6 @@
 
 %% APIa
 -export([add/1]).
--define(PREFIX, "notices:").
 
 add({notices, NoticeName}) ->
     NoticesUuid = uuid:to_string(uuid:uuid4()),
@@ -19,5 +18,5 @@ add({notices, NoticeName}) ->
     {Mega, Secs, _} = now(),
     Timestamp = Mega*1000000 + Secs,
 
-    redis:zadd(?PREFIX, [Timestamp, NoticeName]),
+    redis:zadd("notices", [Timestamp, NoticeName]),
     NoticesUuid.
