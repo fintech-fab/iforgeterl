@@ -139,12 +139,7 @@ handle({post, "notice/", Req}) ->
     Emails = string:tokens(Group, ","),
 
 %%     Username = erlang:get(user),
-
-    lists:foreach(fun(H) ->
-        Email = string:strip(user:add({guest, H})),
-        user:set_address({email, Email}, Email),
-        groups:add({group, Email}, GroupUid)
-    end, Emails),
+    groups:parse(GroupUid, Emails),
 
     [NoticeUuid, NoticesUuid] = notice:add({notice, GroupUid, Datetime, Text}),
 

@@ -49,25 +49,25 @@ add({guest, Username}) ->
 
 set_address({address, Email, Phone}, Uuid) ->
     Command = "HMSET",
-    Key = "user:" ++ Uuid ++ ":address",
+    Key = "user:" ++ Uuid ++ ":addresses",
     redis:call({send_redis, {Command, Key, ["email", Email, "phone", Phone]}}),
     Uuid;
 
 set_address({email, Email}, Uuid) ->
     Command = "HSET",
-    Key = "user:" ++ Uuid ++ ":address",
+    Key = "user:" ++ Uuid ++ ":addresses",
     redis:call({send_redis, {Command, Key, ["email", Email]}}),
     Uuid;
 
 set_address({phone, Phone}, Uuid) ->
     Command = "HSET",
-    Key = "user:" ++ Uuid ++ ":address",
+    Key = "user:" ++ Uuid ++ ":addresses",
     redis:call({send_redis, {Command, Key, ["phone", Phone]}}),
     Uuid.
 
 get_address(Uuid) ->
     Command = "HGETALL",
-    Key = "user:" ++ Uuid ++ ":address",
+    Key = "user:" ++ Uuid ++ ":addresses",
 
     {ok, Value} = redis:call({send_redis, {Command, Key}}),
     Value.

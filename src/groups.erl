@@ -37,3 +37,15 @@ get(Uuid) ->
     Key2 = "group:" ++ Uuid ++ ":members",
     {ok, Members} = redis:call({send_redis, {Command2, Key2}}),
     [{info, Value}, {members, Members}].
+
+parse(GroupUid, Input) ->
+
+    lists:foreach(fun(H) ->
+        Email = string:strip(user:add({guest, H})),
+
+
+        user:set_address({email, Email}, Email),
+        groups:add({group, Email}, GroupUid)
+    end, Input),
+
+    Input.
