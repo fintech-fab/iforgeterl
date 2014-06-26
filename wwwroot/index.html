@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>I forget - cервис напоминаний</title>
+    <title>iforget - cервис напоминаний</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,6 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <!-- Bootstrap -->
     <link href="/css/bootstrap.css" rel="stylesheet">
-    <link href="/css/datepicker.css" rel="stylesheet">
     <link href="/css/datepicker3.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/bootstrap-timepicker.css" rel="stylesheet">
@@ -19,7 +18,6 @@
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/datepicker.js"></script>
 <script src="/js/bootstrap-datepicker.js"></script>
 <script src="/js/bootstrap-timepicker.js"></script>
 <script src="/js/main.js"></script>
@@ -42,7 +40,9 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="/user/signup/">регистрация</a></li>
+                    <li class="active"><a href="/">главная</a></li>
+                    <li><a href="/contacts.html">контакты</a></li>
+                    <li><a href="/help.html">помощь</a></li>
                     <li><a href="/user/">войти</a></li>
                 </ul>
             </div>
@@ -51,102 +51,93 @@
 
     <div class="container dynamic-con" style="margin-top: -25px; background-color: #FFb;">
         <div class="row">
-            <br>
-
-
-            
             <div class="container theme-showcase" role="main">
-    <br>
+                <br>
 
-    <div class="jumbotron" align="right">
-        <p>Сервис интерактивных напоминаний "I forget" обеспечивает своевременную доставку (по e-mail, sms,
-            mms
-            и т.д.) напоминаний, созданных вашими друзьями для вас и вами для ваших друзей, коллег по
-            работе,
-            подчинённых и вообще кого угодно :)</p>
-        <a href="#" class="btn btn-lg btn-warning" role="button">Как это работает? »</a>
-    </div>
-</div>
-            
-
-
-            <div class="col-lg-1">
+                <div class="jumbotron" align="right">
+                    <p>Сервис интерактивных напоминаний "I forget" обеспечивает своевременную доставку (по e-mail, sms,
+                        mms
+                        и т.д.) напоминаний, созданных вашими друзьями для вас и вами для ваших друзей, коллег по
+                        работе,
+                        подчинённых и вообще кого угодно :)</p>
+                    <a href="#" class="btn btn-lg btn-warning" role="button">Как это работает? &raquo;</a>
+                </div>
             </div>
 
-            <div class="col-lg-10">
-                
-                <div class="panel panel-warning">
-    <div class="panel-heading">
-        <div align="center"><h3 class="panel-title">Создать напоминание</h3></div>
-    </div>
-    <div class="row">
-        <div class="panel-body">
-            <div class="col-lg-7">
-                <div class="input-group input-message"> <textarea id="notice" class="form-control notice-text"
-                              placeholder="Введите сюда текст Вашего напоминания"></textarea>
+            <div class="row">
+                <div class="col-lg-1">
                 </div>
-                <br>
+                <div class="col-lg-10">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <div align="center"><h3 class="panel-title">Создать напоминание</h3></div>
+                        </div>
+                        <div class="row">
+                            <div class="panel-body">
+                                <div class="col-lg-7">
+                                    <div class="input-group input-message">
+                                        <textarea id="notice" class="form-control notice-text" placeholder="Введите сюда текст Вашего напоминания" ></textarea>
+                                    </div>
+                                    <br>
 
-                <div align="right">
-                    <a href="#" class="btn btn-md btn-default" role="button">&nbsp; Приложение...
-                        &nbsp;</a>
+                                    <div align="right">
+                                        <a href="#" class="btn btn-md btn-default" role="button">&nbsp; Приложение...
+                                            &nbsp;</a>
+                                    </div>
+                                    <br>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">@</span>
+                                        <input id="receiver" class="form-control" placeholder="Кому отправить?" type="text">
+                                    </div>
+                                    <br>
+
+                                    <div class="input-group date">
+                                        <span class="input-group-addon">Дата</span>
+                                        <input id="datepicker"  class="form-control" placeholder="дд.мм.гггг" type="text"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+
+                                    <br>
+                                    <script type="text/javascript">
+                                        $('input#datepicker').datepicker({
+                                            format: "dd.mm.yyyy",
+                                            language: "ru",
+                                            orientation: "bottom auto",
+                                            todayBtn: "linked",
+                                            multidate: true,
+                                            multidateSeparator: ", ",
+                                            todayHighlight: true
+                                        });
+                                    </script>
+
+                                    <div class="input-group bootstrap-timepicker">
+                                        <span class="input-group-addon">Время</span>
+                                        <input type="text" id="timepicker" class="form-control" ><span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                    </div>
+
+                                    <br>
+                                    <script type="text/javascript">
+                                        $('#timepicker').timepicker({
+                                            minuteStep: 5,
+                                            showInputs: false,
+                                            timeFormat: "HH:mm",
+                                            disableFocus: true,
+                                            showMeridian: false
+                                        });
+                                    </script>
+
+                                    <div align="right">
+                                        <a href="#" class="btn btn-md btn-warning btn-block" role="button" onclick="send_notice(); return false">Отправить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <br>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="input-group">
-                    <span class="input-group-addon">@</span>
-                    <input id="receiver" class="form-control" placeholder="Кому отправить?" type="text">
+                <div class="col-lg-1">
                 </div>
-                <br>
-
-                <div class="input-group date">
-                    <span class="input-group-addon">Дата</span>
-                    <input id="datepicker" class="form-control" placeholder="дд.мм.гггг" type="text"><span
-                        class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                </div>
-
-                <br>
-                <script type="text/javascript">
-                    $('input#datepicker').datepicker({
-                        format: "dd.mm.yyyy",
-                        defaultDate: new Date(2000,01,01),
-                        language: "ru",
-                        orientation: "bottom auto",
-                        todayHighlight: true
-                    });
-                </script>
-
-                <div class="input-group bootstrap-timepicker">
-                    <span class="input-group-addon">Время</span>
-                    <input id="timepicker" class="form-control" type="text"><span
-                        class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                </div>
-
-                <br>
-                <script type="text/javascript">
-                    $('#timepicker').timepicker({
-                        minuteStep: 5,
-                        showInputs: false,
-                        timeFormat: "HH:mm",
-                        disableFocus: true,
-                        showMeridian: false
-                    });
-                </script>
-
-                <div align="right">
-                    <a href="#" class="btn btn-md btn-warning btn-block" role="button" onclick="send_notice();">Отправить</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-                
-            </div>
-
-            <div class="col-lg-1">
             </div>
         </div>
     </div>
@@ -161,7 +152,8 @@
         <a href="#">реклама</a>
         <br><br>
 
-        <p class="muted">iforget &copy; 2014</p>
+        <p class="muted">iforget &copy; 2014<br>
+            <a href="http://www.fintech-fab.ru/" class="orange minurl">FINTECH_FAB</a></p>
     </div>
 </div>
 </body>
