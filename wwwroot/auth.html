@@ -62,10 +62,10 @@
                         <div class="col-lg-10">
 
                             <div class="panel-body">
-                                <form class="form-signin" role="form">
-                                    <input type="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                                <form class="form-signin" role="form" action="/user/auth" method="post">
+                                    <input type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
                                     <br>
-                                    <input type="password" class="form-control" autocomplete="off" placeholder="Введите ваш пароль" required>
+                                    <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Введите ваш пароль" required>
                                     <label class="checkbox">
                                         <input type="checkbox" value="remember-me">Запомнить меня</label>
                                     <button class="btn btn-lg btn-warning btn-block" type="submit">Войти</button>

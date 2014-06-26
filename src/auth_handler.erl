@@ -23,8 +23,11 @@ handle({get, "signup/", Req}) ->
 handle({post, "auth", Req}) ->
 
     PostData = Req:parse_post(),
-    Username = proplists:get_value("login", PostData),
+    Username = proplists:get_value("email", PostData),
     Password = proplists:get_value("password", PostData),
+
+    %% TODO
+    %% Пустые имя пользователя или пароль
 
     case user:auth(Username, Password) of
         true ->

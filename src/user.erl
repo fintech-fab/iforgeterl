@@ -68,6 +68,7 @@ get({user, Uuid}) ->
 auth(Username, Password) ->
 
     User = get({user, Username}),
+    io:write(User),
 
     case User of
 
@@ -76,8 +77,8 @@ auth(Username, Password) ->
         _ ->
 
             [
-                <<"username">>, _,
-                <<"password">>, Pwd
+                {password, Pwd},
+                _
             ] = User,
 
             Hash = getPasswordHash(lists:flatten(Password)),
