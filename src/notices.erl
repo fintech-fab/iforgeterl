@@ -19,4 +19,10 @@ add({notices, NoticeName}) ->
     Timestamp = Mega*1000000 + Secs,
 
     redis:zadd("notices", [Timestamp, NoticeName]),
+    NoticesUuid;
+
+add({notices, NoticeName, Datetime}) ->
+    NoticesUuid = uuid:to_string(uuid:uuid4()),
+
+    redis:zadd("notices", [Datetime, NoticeName]),
     NoticesUuid.

@@ -20,7 +20,7 @@ add({notice, Group, Datetime, Text}) ->
     Author = "default",
     Attributes = ["group", "group:"++Group, "message", Text, "datetime", Datetime, "author", Author],
     redis:hmset(Key,Attributes),
-    NoticesUuid = notices:add({notices, Key}),
+    NoticesUuid = notices:add({notices, Key, Datetime}),
     [list_to_binary(NoticeUuid), list_to_binary(NoticesUuid)].
 
 get({notice_uuid, Uuid}) ->
