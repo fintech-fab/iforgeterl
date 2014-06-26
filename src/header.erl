@@ -32,18 +32,15 @@ redirect(Req, Url) ->
     Req:respond({301, lists:append(Headers, [{"Location", Url}]), ""}).
 
 getHeaders() ->
-    Headers = [{"Content-Type", "text/plain"}],
-
-    Cookies = erlang:get(cookies),
-    case Cookies of
-        undefined ->
-            Headers;
-        _ ->
-            lists:append(Headers, Cookies)
-    end.
+    Headers = getHeaders("text/plain").
 
 getHeaders(ContentType) ->
-    Headers = [{"Content-Type", ContentType}],
+
+    Headers = [
+        {"Content-Type", ContentType},
+        {"Cache-Control", "no-store, no-cache, must-revalidate"},
+        {"Expires", "Sat, 26 Jul 1997 05:00:00 GMT"}
+    ],
 
     Cookies = erlang:get(cookies),
     case Cookies of
@@ -52,7 +49,3 @@ getHeaders(ContentType) ->
         _ ->
             lists:append(Headers, Cookies)
     end.
-
-
-
-

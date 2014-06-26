@@ -120,7 +120,7 @@ handle({post, "user", Req}) ->
                 []
             });
         _ ->
-            user:set_address({address, Username, <<"">>}, Uuid),
+            user:set_address({email, Username}, Uuid),
             auth:login(Username),
             header:json({ok, Req}, Uuid)
     end;

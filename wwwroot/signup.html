@@ -62,10 +62,10 @@
                         <div class="col-lg-10">
 
                             <div class="panel-body">
-                                <form role="form">
-                                    <input type="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                                <form role="form"onsubmit=" return signup(this);">
+                                    <input type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
                                     <br>
-                                    <input type="password" class="form-control" autocomplete="off" placeholder="Придумайте пароль" required>
+                                    <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Придумайте пароль" required>
                                     <label class="checkbox">
                                         <input type="checkbox" value="remember-me">Я согласен(на) с
                                         <a href="#rules" class="orange">условиями регистрации и правилами

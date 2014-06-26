@@ -32,6 +32,5 @@ auth(Req) ->
 .
 
 login(Username) ->
-    io:format("START SESSION~n"),
     Session = session:start({user, Username}),
     cookie:set("sess", Session).

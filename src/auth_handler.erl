@@ -20,6 +20,17 @@ handle({get, "", Req}) ->
 handle({get, "signup/", Req}) ->
     render_ok(Req, signup);
 
+handle({post, "sess", Req}) ->
+
+    Username = erlang:get(user),
+
+    case Username of 
+        undefined ->
+            header:json({ok, Req}, []);
+        _ ->
+            header:json({ok, Req}, Username)
+    end;
+
 handle({post, "auth", Req}) ->
 
     PostData = Req:parse_post(),
@@ -36,6 +47,15 @@ handle({post, "auth", Req}) ->
         false ->
             render_ok(Req, auth)
     end;
+
+handle({get, "logout", Req}) ->
+    erlang:put(user, []),
+    cookie:del("sess"),
+
+    %% TODO
+    %% Очистить сессию в redis
+
+    header:redirect(Req, "/");
 
 handle({_, _, Req}) ->
     Req:respond({

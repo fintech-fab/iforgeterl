@@ -6,6 +6,12 @@
     /* background-color: #FFB; */
     border-color: #FF6;
 }
+.nav > .guest {
+    display: block;
+}
+.nav > .profile{
+    display: none;
+}
 body {
     background-color: #fff;
     overflow-y: scroll;

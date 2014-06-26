@@ -11,7 +11,7 @@
 
 %% API
 %% -compile({no_auto_import,[get/3, set/1]}).
--export([get/3, set/2]).
+-export([get/3, set/2, del/1]).
 
 get(Req, Key, Default) ->
     case Req:get_cookie_value(Key) of
@@ -21,6 +21,15 @@ get(Req, Key, Default) ->
 
 set(Key, Value) ->
     Cookie = mochiweb_cookies:cookie(Key, Value, [{path, "/"}]),
+    append(Cookie),
+    Cookie.
+
+del(Key) ->
+    Cookie = mochiweb_cookies:cookie(Key, "deleted", [{path, "/"}, {max_age, 0}]),
+    append(Cookie),
+    Cookie.
+
+append(Cookie) ->
     OriginCookies = erlang:get(cookies),
 
     NewCookies = [],
@@ -32,6 +41,4 @@ set(Key, Value) ->
     end,
 
     ResultCookies = [Cookie | NewCookies],
-    erlang:put(cookies, ResultCookies),
-
-    Cookie.
+    erlang:put(cookies, ResultCookies).
