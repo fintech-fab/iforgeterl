@@ -53,7 +53,8 @@
                         minuteStep: 5,
                         showInputs: false,
                         timeFormat: "HH:mm",
-                        disableFocus: true
+                        disableFocus: true,
+                        showMeridian: false
                     });
                 </script>
 
