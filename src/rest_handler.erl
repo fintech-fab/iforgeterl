@@ -136,7 +136,7 @@ handle({post, "notice/", Req}) ->
     Username = 312321,
     GroupName = "default",
     GroupUid = groups:create({group, GroupName, Username}),
-    Emails = string:tokens(Group, ", "),
+    Emails = string:tokens(Group, ","),
 
 %%     Username = erlang:get(user),
     groups:parse(GroupUid, Emails),

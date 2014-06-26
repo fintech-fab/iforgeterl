@@ -37,10 +37,24 @@ get(Uuid) ->
 parse(GroupUid, Input) ->
 
     lists:foreach(fun(H) ->
-        Email = user:add({guest, string:strip(H)}),
+        Address = string:strip(H),
 
-        user:set_address({email, Email}, Email),
-        groups:add({group, Email}, GroupUid)
+        Username = parse_address(Address),
+        groups:add({group, Username}, GroupUid)
+
     end, Input),
 
     Input.
+
+parse_address(Address) ->
+    case re:run(Address, "^[\\d\\s\\+]+$") of
+        {match,_} ->
+            Phone = re:replace(Address, "[\\s\\+]+", "", [{return, list}, global]),
+            Username = user:add({guest, Phone}),
+            user:set_address({phone, Phone}, Username),
+            Username;
+        nomatch ->
+            Username = user:add({guest, Address}),
+            user:set_address({email, Address}, Username),
+            Username
+    end.
