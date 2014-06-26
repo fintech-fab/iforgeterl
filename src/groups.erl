@@ -16,7 +16,7 @@
 create({group, Name, Author}) ->
     Uuid = uuid:to_string(uuid:uuid4()),
     Key = "group:" ++ Uuid,
-    Attributes = [Name, Author],
+    Attributes = [name, Name, author, Author],
     redis:hmset(Key,Attributes),
     Uuid.
 
