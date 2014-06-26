@@ -15,10 +15,10 @@
 -import(render, [render_ok/2, render_ok/3]).
 
 handle({get, "", Req}) ->
-    render_ok(Req, auth_dtl);
+    render_ok(Req, auth);
 
 handle({get, "signup/", Req}) ->
-    render_ok(Req, signup_dtl);
+    render_ok(Req, signup);
 
 handle({post, "auth", Req}) ->
 
@@ -31,8 +31,7 @@ handle({post, "auth", Req}) ->
             auth:login(Username),
             header:redirect(Req, "/");
         false ->
-%%             render_ok(Req, auth_dtl, [{username, Username}, {leftzise: 3}, {rightsize:3}, {mainsize:6}])
-            render_ok(Req, auth_dtl, [{username, Username}])
+            render_ok(Req, auth)
     end;
 
 handle({_, _, Req}) ->
