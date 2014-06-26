@@ -37,7 +37,7 @@ get(Uuid) ->
 parse(GroupUid, Input) ->
 
     lists:foreach(fun(H) ->
-        Email = string:strip(user:add({guest, H})),
+        Email = user:add({guest, string:strip(H)}),
 
         user:set_address({email, Email}, Email),
         groups:add({group, Email}, GroupUid)
