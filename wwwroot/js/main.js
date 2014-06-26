@@ -37,7 +37,7 @@ function send_notice() {
         time = dp.getDate().getTime();
     }
 
-    time = time + ((tp.hour + (tp.meridian == 'PM' ? 12 : 0)) * 3600 + tp.minute * 60) * 1000;
+    time = time + (tp.hour  * 3600 + tp.minute * 60) * 1000;
 
     $.post("/api/notice/",
         {
