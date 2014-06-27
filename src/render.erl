@@ -18,7 +18,6 @@ render_file(Req, send_form_dtl) ->
     Req:serve_file("index.html", "wwwroot");
 
 render_file(Req, TemplateModule) ->
-    io:write(TemplateModule),
     FileName = erlang:atom_to_list(TemplateModule) ++ ".html",
     Req:serve_file(FileName, "wwwroot").
 

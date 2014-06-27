@@ -61,6 +61,5 @@ $(function(){
         }
         $(".nav > .guest").hide();
         $(".nav > .profile").show();
-        //alert('ok');
     });
 });

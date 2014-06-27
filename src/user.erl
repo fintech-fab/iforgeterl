@@ -68,7 +68,6 @@ get({user, Uuid}) ->
 auth(Username, Password) ->
 
     User = get({user, Username}),
-    io:write(User),
 
     case User of
 
@@ -76,10 +75,7 @@ auth(Username, Password) ->
             false;
         _ ->
 
-            [
-                {password, Pwd},
-                _
-            ] = User,
+            Pwd = proplists:get_value(password, User),
 
             Hash = getPasswordHash(lists:flatten(Password)),
             PasswordList = binary_to_list(Pwd),
