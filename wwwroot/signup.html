@@ -38,8 +38,21 @@
                     <li><a href="/">главная</a></li>
                     <li><a href="#">контакты</a></li>
                     <li><a href="#">помощь</a></li>
-                    <li class="active"><a href="#">регистрация</a></li>
-                    <li><a href="/user/">войти</a></li>
+                    <li class="dropdown guest">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">профиль<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="guest"><a href="/user/">войти</a></li>
+                            <li class="guest"><a href="/user/signup/">регистрация</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown profile">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">профиль<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="#">просмотреть профиль</a> </li>
+                            <li> <a href="#">настройки</a> </li> 
+                            <li class="divider"></li> <li> <a href="/user/logout">выйти</a> </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
