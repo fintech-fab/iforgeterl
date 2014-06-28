@@ -1,0 +1,4 @@
+[program:iforget]
+
+directory=/var/www/iforget/
+command=run_erl /var/log/iforget/ /var/log/iforget/ "erl -pa ebin edit deps/*/ebin -boot start_sasl -s iforget -s reloader"

@@ -30,4 +30,4 @@ Install
 И запускаем:
 
     sudo supervisorctl reload
-    sudo supervisorctl iforget start
+    sudo supervisorctl starti forget 
