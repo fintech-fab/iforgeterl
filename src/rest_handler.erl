@@ -28,7 +28,7 @@ handle({get, "notice/" ++ NoticeUuid, Req}) ->
     });
 
 handle({get, "group/" ++ Uuid, Req}) ->
-    Group = groups:get(Uuid),
+    Group = groups:get({uuid, Uuid}),
     Req:respond({
         200,
         [{"Content-Type", "application/json"}],
@@ -39,7 +39,7 @@ handle({post, "group/add/" ++ Uuid, Req}) ->
     PostData = Req:parse_post(),
     Username = proplists:get_value("username", PostData),
     groups:add({group, Username}, Uuid),
-    Group = groups:get(Uuid),
+    Group = groups:get({uuid, Uuid}),
     io:write(Group),
 
     Req:respond({
@@ -125,6 +125,9 @@ handle({post, "user", Req}) ->
             header:json({ok, Req}, Uuid)
     end;
 
+
+handle({post, "notice", Req}) ->
+    handle({post, "notice/", Req});
 
 handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),

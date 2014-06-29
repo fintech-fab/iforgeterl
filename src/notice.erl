@@ -24,23 +24,9 @@ add({notice, Group, Datetime, Text}) ->
     [list_to_binary(NoticeUuid), list_to_binary(NoticesUuid)].
 
 get({notice_uuid, Uuid}) ->
-    {
-        ok,
-        [
-            <<"group">>, Group,
-            <<"message">>, Message,
-            <<"datetime">>, Datetime,
-            <<"author">>, Author
-        ]
-    } = redis:hgetall(?PREFIX ++ Uuid),
-
-    [
-        {<<"uuid">>, list_to_binary(Uuid)},
-        {<<"group">>, Group},
-        {<<"message">>, Message},
-        {<<"datetime">>, Datetime},
-        {<<"author">>, Author}
-    ].
+    Key = key({notice_uuid, Uuid}),
+    {ok, Notice} = redis:hgetall(Key),
+    Notice.
 
 get_all() ->
     Key = "KEYS", ?PREFIX ++ "*",

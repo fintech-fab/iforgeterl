@@ -33,4 +33,5 @@ auth(Req) ->
 
 login(Username) ->
     Session = session:start({user, Username}),
-    cookie:set("sess", Session).
+    cookie:set("sess", Session),
+    Session.

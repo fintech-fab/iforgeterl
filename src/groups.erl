@@ -26,11 +26,14 @@ add({group, User}, Uuid) ->
     {ok, Value} = redis:sadd(Key,Attributes),
     Value.
 
-get(Uuid) ->
+get({uuid, Uuid}) ->
     KeyGroup = "group:" ++ Uuid,
+    groups:get(KeyGroup);
+
+get(KeyGroup) ->
     {ok, Value} = redis:hgetall(KeyGroup),
 
-    KeyMembers = "group:" ++ Uuid ++ ":members",
+    KeyMembers = KeyGroup ++ ":members",
     {ok, Members} = redis:smembers(KeyMembers),
     [{info, Value}, {members, Members}].
 
