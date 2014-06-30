@@ -13,19 +13,31 @@
 -export([get/1, add/1, get_all/0, remove/1]).
 -define(PREFIX, "notice:").
 
-add({notice, Group, Datetime, Text}) ->
+add({notice, GroupUuid, Datetime, Text}) ->
     NoticeUuid = uuid:to_string(uuid:uuid4()),
-    Key = ?PREFIX ++ NoticeUuid,
+    Key = key({notice_uuid, NoticeUuid}),
 
-    Author = "default",
-    Attributes = ["group", "group:"++Group, "message", Text, "datetime", Datetime, "author", Author],
-    redis:hmset(Key,Attributes),
-    NoticesUuid = notices:add({notices, Key, Datetime}),
-    [list_to_binary(NoticeUuid), list_to_binary(NoticesUuid)].
+    Group = groups:get({uuid, GroupUuid}),
+    Author = proplists:get_value(author, Group),
+
+    Attributes = [
+        "group", "group:" ++ GroupUuid,
+        "message", Text,
+        "datetime", Datetime,
+        "author", Author
+    ],
+    redis:hmset(Key, Attributes),
+
+    notices:add({notices, Key, Datetime}),
+
+    NoticeUuid.
 
 get({notice_uuid, Uuid}) ->
     Key = key({notice_uuid, Uuid}),
-    {ok, Notice} = redis:hgetall(Key),
+    notice:get(Key);
+
+get(NoticeKey) ->
+    {ok, Notice} = redis:hgetall(NoticeKey),
     Notice.
 
 get_all() ->
@@ -37,7 +49,7 @@ key({notice_uuid, Uuid}) ->
     ?PREFIX ++ Uuid.
 
 remove({notice_uuid, Uuid}) ->
-    Key=?PREFIX ++ Uuid,
+    Key = ?PREFIX ++ Uuid,
     {ok, <<"1">>} = redis:del(Key),
     ok.
 

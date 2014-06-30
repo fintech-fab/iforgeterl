@@ -32,32 +32,19 @@ get({uuid, Uuid}) ->
 
 get(KeyGroup) ->
     {ok, Value} = redis:hgetall(KeyGroup),
+    Value.
 
-    KeyMembers = KeyGroup ++ ":members",
-    {ok, Members} = redis:smembers(KeyMembers),
-    [{info, Value}, {members, Members}].
+member({uuid, GroupUuid}) ->
+    Key = "group:" ++ GroupUuid,
+    member(Key);
 
-parse(GroupUid, Input) ->
+member(Key) ->
+    Members = redis:smembers(Key ++ ":members"),
+    member_result(Members).
 
-    lists:foreach(fun(H) ->
-        Address = string:strip(H),
+member_result({ok, Members}) ->
+    Members;
 
-        Username = parse_address(Address),
-        groups:add({group, Username}, GroupUid)
+member_result([]) ->
+    [].
 
-    end, Input),
-
-    Input.
-
-parse_address(Address) ->
-    case re:run(Address, "^[\\d\\s\\+]+$") of
-        {match,_} ->
-            Phone = re:replace(Address, "[\\s\\+]+", "", [{return, list}, global]),
-            Username = user:add({guest, Phone}),
-            user:set_address({phone, Phone}, Username),
-            Username;
-        nomatch ->
-            Username = user:add({guest, Address}),
-            user:set_address({email, Address}, Username),
-            Username
-    end.

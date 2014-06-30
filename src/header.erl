@@ -25,14 +25,14 @@ send({not_find, Req}) ->
 
 json({ok, Req}, Data) ->
     Headers = getHeaders("application/json"),
-    Req:respond({200, Headers, mochijson2:encode([{<<"uuid">>, list_to_binary(Data)}])}).
+    Req:respond({200, Headers, mochijson2:encode(Data)}).
 
 redirect(Req, Url) ->
     Headers = getHeaders(),
     Req:respond({301, lists:append(Headers, [{"Location", Url}]), ""}).
 
 getHeaders() ->
-    Headers = getHeaders("text/plain").
+    getHeaders("text/plain").
 
 getHeaders(ContentType) ->
 

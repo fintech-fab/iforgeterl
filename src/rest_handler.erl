@@ -40,13 +40,8 @@ handle({post, "group/add/" ++ Uuid, Req}) ->
     Username = proplists:get_value("username", PostData),
     groups:add({group, Username}, Uuid),
     Group = groups:get({uuid, Uuid}),
-    io:write(Group),
 
-    Req:respond({
-        200,
-        [{"Content-Type", "application/json"}],
-        mochijson2:encode([{<<"uuid">>, Group}])
-    });
+    header:json({ok, Req}, <<"ok">>);
 
 handle({post, "group", Req}) ->
     PostData = Req:parse_post(),
@@ -64,9 +59,6 @@ handle({post, "group", Req}) ->
         mochijson2:encode([{<<"group">>, list_to_binary(Uuid)}])
     });
 
-
-
-
 handle({get, "user/address/" ++ Uuid, Req}) ->
 
     User = user:get_address(Uuid),
@@ -75,6 +67,7 @@ handle({get, "user/address/" ++ Uuid, Req}) ->
         [{"Content-Type", "application/json"}],
         mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"user">>, list_to_binary(User)}])
     });
+
 handle({post, "user/address/" ++ Uuid, Req}) ->
     PostData = Req:parse_post(),
     Email = proplists:get_value("email", PostData),
@@ -97,9 +90,6 @@ handle({get, "user/" ++ Uuid, Req}) ->
         [{"Content-Type", "application/json"}],
         mochijson2:encode([{<<"ok">>, <<"ok">>}, {<<"user">>, User}])
     });
-
-
-
 
 handle({post, "user", Req}) ->
     PostData = Req:parse_post(),
@@ -125,32 +115,33 @@ handle({post, "user", Req}) ->
             header:json({ok, Req}, Uuid)
     end;
 
-
+%%
+%% Добавить напоминалку
+%%
 handle({post, "notice", Req}) ->
     handle({post, "notice/", Req});
 
 handle({post, "notice/", Req}) ->
     QueryStringData = Req:parse_post(),
-    %% [{"datetime",Datetime},{"group",Group,{"notice",Text}] = QueryStringData,
+
     Text = proplists:get_value("notice", QueryStringData),
     Datetime = proplists:get_value("datetime", QueryStringData),
     Group = proplists:get_value("group", QueryStringData),
 
-    Username = 312321,
-    GroupName = "default",
-    GroupUid = groups:create({group, GroupName, Username}),
+    Author = auth:get(),
     Emails = string:tokens(Group, ","),
 
-%%     Username = erlang:get(user),
-    groups:parse(GroupUid, Emails),
+    case notice_controller:add(Text, Datetime, Author, {raw, Emails}) of
 
-    [NoticeUuid, NoticesUuid] = notice:add({notice, GroupUid, Datetime, Text}),
+        {ok, Notice} ->
+            BinaryNoticeUuid = list_to_binary(Notice),
+            header:json({ok, Req}, {struct, [{uuid, BinaryNoticeUuid}]});
 
-    Req:respond({
-        200,
-        [{"Content-Type", "application/json"}],
-        mochijson2:encode([{ok, ok}, {notice_uuid, NoticeUuid}, {notices_uuid, NoticesUuid}])
-    });
+        {error, Message} ->
+            BinaryMessage = list_to_binary(Message),
+            header:json({ok, Req}, {struct, [{error, BinaryMessage}]})
+
+    end;
 
 handle({delete, "notice/" ++ NoticeUuid, Req}) ->
     Req:respond({

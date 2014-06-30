@@ -46,7 +46,7 @@ function send_notice() {
             datetime: Math.ceil(time/1000)
         },
         function (data) {
-            if (data.ok = "ok") {
+            if (data.uuid != undefined) {
                 alert("Напоминалка поставлена");
             }
         }

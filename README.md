@@ -1,4 +1,4 @@
-Install 
+Iforiget.biz (web)
 ========================
 
 **Установка (Ubuntu)**
@@ -30,4 +30,16 @@ Install
 И запускаем:
 
     sudo supervisorctl reload
-    sudo supervisorctl starti forget 
+    sudo supervisorctl starti forget
+
+**Запуск тестов**
+------------------------
+Запускаем коммандную строку:
+
+	% > make
+
+И выполняем команду:
+
+	> eunit:test([auth, notice, groups]).
+
+

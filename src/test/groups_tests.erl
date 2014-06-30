@@ -18,19 +18,14 @@ group_test_() ->
     Uuid = groups:create({group, "GroupName", "TestUser"}),
 
     Group = groups:get("group:" ++ Uuid),
-    Info = proplists:get_value(info, Group),
-    Author = proplists:get_value(author, Info),
-    GroupName = proplists:get_value(name, Info),
-
-    Members = proplists:get_value(members, Group),
+    Author = proplists:get_value(author, Group),
+    GroupName = proplists:get_value(name, Group),
 
     GroupGetByUuid = groups:get({uuid, Uuid}),
 
     [
         ?_assert(Uuid =/= []),
-        ?_assert(Info =/= []),
         ?_assert(Author =:= <<"TestUser">>),
         ?_assert(GroupName =:= <<"GroupName">>),
-        ?_assert(Group =:= GroupGetByUuid),
-        ?_assert(Members =:= [])
+        ?_assert(Group =:= GroupGetByUuid)
     ].

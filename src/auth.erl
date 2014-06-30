@@ -10,7 +10,7 @@
 -author("topas").
 
 %% API
--export([auth/1, login/1]).
+-export([auth/1, login/1, get/0]).
 
 auth(Req) ->
     Cookie = cookie:get(Req, "sess", undefined),
@@ -28,8 +28,15 @@ auth(Req) ->
                     io:format("User: ~s ~n", [User]),
                     erlang:put(user, [User])
             end
-    end
-.
+    end.
+
+get() ->
+    case erlang:get(user) of
+        undefined ->
+            {guest};
+        Username ->
+            {auth, Username}
+    end.
 
 login(Username) ->
     Session = session:start({user, Username}),

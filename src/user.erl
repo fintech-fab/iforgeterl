@@ -15,32 +15,44 @@
 
 
 add({user, Username, Password}) ->
+
     Key = "user:" ++ Username,
     Exists = redis:exist(Key),
     case Exists of
-        <<49>>->
+        true ->
             [];
-         _->
+        false ->
             Attributes = ["username", Username, "password", getPasswordHash(Password)],
-            redis:hmset(Key,Attributes),
+            redis:hmset(Key, Attributes),
             Username
     end;
 
+%%
+%% {guest, {email, Username}}
+%% {guest, {phone, Username}}
+%%
+add({guest, {Type, Address}}) ->
+    Username = add({guest, Address}),
+    set_address({Type, Address}, Username),
+    Username;
+
 add({guest, Username}) ->
+
     Key = "user:" ++ Username,
     Exists = redis:exist(Key),
+
     case Exists of
-        <<49>>->
+        true ->
             Username;
-        _->
+        false ->
             Attributes = ["username", Username, "password", ""],
-            redis:hmset(Key,Attributes),
+            redis:hmset(Key, Attributes),
             Username
     end.
 
 set_address({address, Email, Phone}, Uuid) ->
     Key = "user:" ++ Uuid ++ ":address",
-    redis:hmset(Key,["email", Email, "phone", Phone]),
+    redis:hmset(Key, ["email", Email, "phone", Phone]),
     Uuid;
 
 set_address({email, Email}, Uuid) ->
@@ -87,6 +99,9 @@ auth(Username, Password) ->
                     false
             end
     end.
+
+key(UserUuid) ->
+    "user:" ++ UserUuid.
 
 getPasswordHash(Password) ->
     Hash = helpers:md5(Password),

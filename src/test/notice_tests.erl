@@ -23,35 +23,41 @@ post_test_() ->
     } = rest_handler:handle({post, "notice", request_stub}),
 
     {Struct, Result} = mochijson2:decode(JsonResult),
-    BinaryUuid = proplists:get_value(<<"notice_uuid">>, Result),
+    BinaryUuid = proplists:get_value(<<"uuid">>, Result),
     NoticeUuid = binary_to_list(BinaryUuid),
 
     Notice = notice:get({notice_uuid, NoticeUuid}),
     Author = proplists:get_value(author, Notice),
     Datetime = proplists:get_value(datetime, Notice),
     Message = proplists:get_value(message, Notice),
-    GroupUuid = proplists:get_value(group, Notice),
 
-    Group = groups:get(binary_to_list(GroupUuid)),
+    BinaryGroupUuid = proplists:get_value(group, Notice),
 
-    GroupInfo = proplists:get_value(info, Group),
-    GroupName = proplists:get_value(name, GroupInfo),
-    GroupAuthor = proplists:get_value(author, GroupInfo),
+    %% group:97651470-d365-41cb-9243-f1bac1bcfeea
+    GroupUuid = binary_to_list(BinaryGroupUuid),
 
-    GroupMembers = proplists:get_value(members, Group),
+    Group = groups:get(GroupUuid),
+
+    GroupName = proplists:get_value(name, Group),
+    GroupAuthor = proplists:get_value(author, Group),
+
+    GroupMembers = groups:member(GroupUuid),
 
     [
         ?_assert(HttpStatus =:= 200),
-        ?_assert(HttpHeaders =:= [{"Content-Type", "application/json"}]),
+
+%%         ?_assert(HttpHeaders =:= [{"Content-Type", "application/json"}]),
         ?_assert(Struct =:= struct),
         ?_assert(NoticeUuid =/= []),
-        ?_assert(Author =:= <<"default">>),
+        ?_assert(Author =:= <<"user:test@example.com">>),
         ?_assert(Datetime =:= <<"1401010">>),
         ?_assert(Message =:= <<"Example">>),
         ?_assert(GroupUuid =/= <<"">>),
         ?_assert(GroupUuid =/= []),
-        ?_assert(GroupName =:= <<"default">>),
-        ?_assert(GroupAuthor =:= <<"312321">>),
+        ?_assert(Group =:= [{author,<<"user:test@example.com">>},{name,<<"self">>}]),
+        ?_assert(GroupName =:= <<"self">>),
+        ?_assert(GroupAuthor =:= <<"user:test@example.com">>),
+        ?_assert(is_list(Group) =:= true),
         ?_assert(GroupMembers =:= [<<"user:test@example.com">>])
     ].
 
