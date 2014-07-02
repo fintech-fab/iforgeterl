@@ -5,7 +5,13 @@
 %% -export([]).
 
 render_ok(Req, TemplateModule, Params, Options) ->
-    render_file(Req, TemplateModule).
+%%     Options = [{header, notice_dtl}];
+    {ok, Header} = ?MODULE:getHeader(Options),
+
+    {ok, Output} = TemplateModule:render(Params),
+    {ok, Layout} = layout_dtl:render([{content, Output}, {header, Header}, {leftsize, 1}, {rightsize, 1}, {mainsize, 10}], [{auto_escape, nil}]),
+
+    Req:ok({"text/html", Layout}).
 
 render_ok(Req, TemplateModule, Params) ->
     render_ok(Req, TemplateModule, Params, []).

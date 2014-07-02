@@ -1,0 +1,73 @@
+<div class="col-lg-1">
+</div>
+<div class="col-lg-10">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <div align="center"><h3 class="panel-title">Создать напоминание</h3></div>
+        </div>
+        <div class="row">
+            <div class="panel-body">
+                <div class="col-lg-7">
+                    <div class="input-group input-message">
+                        <textarea id="notice" class="form-control notice-text" placeholder="Введите сюда текст Вашего напоминания" ></textarea>
+                    </div>
+                    <br>
+
+                    <div align="right">
+                        <a href="#" class="btn btn-md btn-default" role="button">&nbsp; Приложение...
+                            &nbsp;</a>
+                    </div>
+                    <br>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="input-group">
+                        <span class="input-group-addon">@</span>
+                        <input id="receiver" class="form-control" placeholder="Кому отправить?" type="text">
+                    </div>
+                    <br>
+
+                    <div class="input-group date">
+                        <span class="input-group-addon">Дата</span>
+                        <input id="datepicker"  class="form-control" placeholder="дд.мм.гггг" type="text"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+
+                    <br>
+                    <script type="text/javascript">
+                        $('input#datepicker').datepicker({
+                            format: "dd.mm.yyyy",
+                            language: "ru",
+                            orientation: "bottom auto",
+                            todayBtn: "linked",
+                            multidate: true,
+                            multidateSeparator: ", ",
+                            todayHighlight: true
+                        });
+                    </script>
+
+                    <div class="input-group bootstrap-timepicker">
+                        <span class="input-group-addon">Время</span>
+                        <input type="text" id="timepicker" class="form-control" ><span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                    </div>
+
+                    <br>
+                    <script type="text/javascript">
+                        $('#timepicker').timepicker({
+                            minuteStep: 5,
+                            showInputs: false,
+                            timeFormat: "HH:mm",
+                            disableFocus: true,
+                            showMeridian: false
+                        });
+                    </script>
+
+                    <div align="right">
+                        <a href="#" class="btn btn-md btn-warning btn-block" role="button" onclick="send_notice(); return false">Отправить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-1">
+</div>

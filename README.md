@@ -6,6 +6,10 @@ Iforiget.biz (web)
 
 Установим необходимое ПО:
 
+    wget http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+    sudo dpkg -i erlang-solutions_1.0_all.deb
+    sudo apt-get update
+
     sudo apt-get install erlang
     sudo apt-get install redis-server
     sudo apt-get install supervisior
