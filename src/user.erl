@@ -16,14 +16,14 @@
 
 add({user, Username, Password}) ->
 
-    Key = "user:" ++ Username,
-    Exists = redis:exist(Key),
+    Exists = is_signup(key(Username)),
+
     case Exists of
         true ->
             [];
         false ->
             Attributes = ["username", Username, "password", getPasswordHash(Password)],
-            redis:hmset(Key, Attributes),
+            redis:hmset(key(Username), Attributes),
             Username
     end;
 
@@ -102,6 +102,24 @@ auth(Username, Password) ->
                     false
             end
     end.
+
+is_signup(UserKey) ->
+    Exists = redis:exist(UserKey),
+    case Exists of
+        true ->
+            User = user:get(UserKey),
+            Password = proplists:get_value(password, User),
+            io:write(Password),
+            case Password of
+                <<"">> ->
+                    false;
+                _ -> 
+                    true
+            end;
+        false ->
+            false
+    end.
+
 
 key(UserUuid) ->
     "user:" ++ UserUuid.

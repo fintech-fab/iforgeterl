@@ -11,8 +11,9 @@
             <div class="col-lg-10">
 
                 <div class="panel-body">
-                    <form role="form"onsubmit=" return signup(this);">
-                        <input type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                    <form role="form" onsubmit="return signup(this);">
+                        <input id="email" type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                        <label id="result" for="email"></label>
                         <br>
                         <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Придумайте пароль" required>
                         <label class="checkbox">

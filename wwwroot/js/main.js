@@ -16,6 +16,11 @@ function signup(form) {
             if (data.uuid != undefined) {
                 window.location = '/';
             }
+
+            if (data.error) {
+                $(form['email']).parent().addClass("has-error");
+                $('#result').text(data.error);
+            }
         }
     );
     return false;

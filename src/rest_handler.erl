@@ -104,15 +104,11 @@ handle({post, "user", Req}) ->
     }),
     case Uuid of
         [] ->
-            Req:respond({
-                200,
-                [{"Content-Type", "application/json"}],
-                []
-            });
+            header:json({ok, Req}, {struct, [{error, <<"Невозможно зарегистрировать пользователя"/utf8>>}]});
         _ ->
             user:set_address({email, Username}, Uuid),
             auth:login(Username),
-            header:json({ok, Req}, Uuid)
+            header:json({ok, Req}, {struct, [{uuid, list_to_binary(Uuid)}]})
     end;
 
 %%
