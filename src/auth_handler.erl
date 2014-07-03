@@ -20,17 +20,6 @@ handle({get, "", Req}) ->
 handle({get, "signup/", Req}) ->
     render_ok(Req, signup_dtl);
 
-handle({post, "sess", Req}) ->
-
-    Username = erlang:get(user),
-
-    case Username of 
-        undefined ->
-            header:json({ok, Req}, []);
-        _ ->
-            header:json({ok, Req}, Username)
-    end;
-
 handle({post, "auth", Req}) ->
 
     PostData = Req:parse_post(),

@@ -17,11 +17,13 @@ auth(Req) ->
 
     case Cookie of
         undefined ->
+            erlang:put(user, []),
             void;
         _ ->
             Session = session:get({session, Cookie}),
             case Session of
                 [] ->
+                    erlang:put(user, []),
                     void;
                 _ ->
                     [{user, User}] = Session,
@@ -31,6 +33,8 @@ auth(Req) ->
 
 get() ->
     case erlang:get(user) of
+        [] ->
+            {guest};
         undefined ->
             {guest};
         Username ->

@@ -7,7 +7,7 @@
 
 -export([start/1, stop/0, loop/2]).
 
--import(render, [render_ok/4]).
+-import(render, [render_ok/4, render_ok/3, render_ok/2]).
 
 
 %% External API
@@ -26,6 +26,7 @@ loop(Req, DocRoot) ->
         "/" ++ Path = Req:get(path),
     try
         auth:auth(Req),
+        erlang:put(path, Req:get(path)),
 
         case Req:get(method) of
             'GET' ->
@@ -34,6 +35,22 @@ loop(Req, DocRoot) ->
                         rest_handler:handle({get, ApiMethod, Req});
                     "user/" ++ Method ->
                         auth_handler:handle({get, Method, Req});
+                    "group/" ++ GroupPathUri ->
+
+%%                         GroupUuid = string:strip(GroupPathUri, right, "/"),
+                        GroupUuid = GroupPathUri,
+
+                        Group = groups:get({uuid, GroupUuid}),
+
+                        case Group of
+                            [] ->
+                                render_ok(Req, not_found_dtl);
+                            _ ->
+                                Members = groups:member({uuid, GroupUuid}),
+
+                                render_ok(Req, group_dtl, [{group, Group}, {members, Members}] )
+                        end;
+
                     "" ->
                         QueryStringData = Req:parse_qs(),
                         Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),

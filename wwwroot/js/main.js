@@ -53,13 +53,3 @@ function send_notice() {
     );
 }
 
-$(function(){
-    $.post("/user/sess", function(data){
-        if (data.uuid == undefined || data.uuid == false){
-            $(".nav > .guest").show();
-            return;
-        }
-        $(".nav > .guest").hide();
-        $(".nav > .profile").show();
-    });
-});

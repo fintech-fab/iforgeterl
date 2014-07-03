@@ -74,7 +74,10 @@ get_address(Uuid) ->
 
 get({user, Uuid}) ->
     Key = "user:" ++ Uuid,
-    {ok, Value} = redis:hgetall(Key),
+    get(Key);
+
+get(UserKey) ->
+    {ok, Value} = redis:hgetall(UserKey),
     Value.
 
 auth(Username, Password) ->
