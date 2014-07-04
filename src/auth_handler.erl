@@ -15,21 +15,10 @@
 -import(render, [render_ok/2, render_ok/3]).
 
 handle({get, "", Req}) ->
-    render_ok(Req, auth);
+    render_ok(Req, auth_dtl);
 
 handle({get, "signup/", Req}) ->
-    render_ok(Req, signup);
-
-handle({post, "sess", Req}) ->
-
-    Username = erlang:get(user),
-
-    case Username of 
-        undefined ->
-            header:json({ok, Req}, []);
-        _ ->
-            header:json({ok, Req}, Username)
-    end;
+    render_ok(Req, signup_dtl);
 
 handle({post, "auth", Req}) ->
 
@@ -45,7 +34,7 @@ handle({post, "auth", Req}) ->
             auth:login(Username),
             header:redirect(Req, "/");
         false ->
-            render_ok(Req, auth)
+            render_ok(Req, auth_dtl)
     end;
 
 handle({get, "logout", Req}) ->

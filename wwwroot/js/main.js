@@ -16,6 +16,11 @@ function signup(form) {
             if (data.uuid != undefined) {
                 window.location = '/';
             }
+
+            if (data.error) {
+                $(form['email']).parent().addClass("has-error");
+                $('#result').text(data.error);
+            }
         }
     );
     return false;
@@ -53,13 +58,3 @@ function send_notice() {
     );
 }
 
-$(function(){
-    $.post("/user/sess", function(data){
-        if (data.uuid == undefined || data.uuid == false){
-            $(".nav > .guest").show();
-            return;
-        }
-        $(".nav > .guest").hide();
-        $(".nav > .profile").show();
-    });
-});

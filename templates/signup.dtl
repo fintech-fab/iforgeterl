@@ -1,0 +1,38 @@
+<div class="col-lg-3">
+</div>
+<div class="col-lg-6">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <div align="center"><h3 class="panel-title">Регистрация</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1">
+            </div>
+            <div class="col-lg-10">
+
+                <div class="panel-body">
+                    <form role="form" onsubmit="return signup(this);">
+                        <input id="email" type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                        <label id="result" for="email"></label>
+                        <br>
+                        <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Придумайте пароль" required>
+                        <label class="checkbox">
+                            <input type="checkbox" value="remember-me">Я согласен(на) с
+                            <a href="#rules" class="orange">условиями регистрации и правилами
+                                использования сервиса</a> iforget.biz</label>
+                        <button class="btn btn-lg btn-warning btn-block" type="submit">Зарегистрироваться
+                        </button>
+                        <br>
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="col-lg-3">
+</div>

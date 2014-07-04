@@ -1,0 +1,38 @@
+<div class="col-lg-4">
+</div>
+<div class="col-lg-4">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <div align="center"><h3 class="panel-title">Авторизация</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1">
+            </div>
+            <div class="col-lg-10">
+
+                <div class="panel-body">
+                    <form class="form-signin" role="form" action="/user/auth" method="post">
+                        <input type="email" name="email" class="form-control" placeholder="Введите Ваш E-mail" required autofocus>
+                        <br>
+                        <input type="password" name="password" class="form-control" autocomplete="off" placeholder="Введите ваш пароль" required>
+                        <label class="checkbox">
+                            <input type="checkbox" value="remember-me">Запомнить меня</label>
+                        <button class="btn btn-lg btn-warning btn-block" type="submit">Войти</button>
+                        <br>
+
+                        <div align="center">
+                            <a href="/user/signup/" class="orange">Регистрация</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="orange">Забыли пароль?</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-lg-1">
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="col-lg-4">
+</div>
