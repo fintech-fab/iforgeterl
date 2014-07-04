@@ -7,7 +7,6 @@
 
 -export([start/1, stop/0, loop/2]).
 
--import(render, [render_ok/4]).
 
 
 %% External API
@@ -23,45 +22,18 @@ stop() ->
     mochiweb_http:stop(?MODULE).
 
 loop(Req, DocRoot) ->
-        "/" ++ Path = Req:get(path),
     try
         auth:auth(Req),
-
-        case Req:get(method) of
-            'GET' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({get, ApiMethod, Req});
-                    "user/" ++ Method ->
-                        auth_handler:handle({get, Method, Req});
-                    "" ->
-                        QueryStringData = Req:parse_qs(),
-                        Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),
-                        render_ok(Req, send_form_dtl, [{datetime, Username}], [{header, notice_dtl}]);
-                    _ ->
-                        Req:serve_file(Path, DocRoot)
-                end;
-            'POST' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({post, ApiMethod, Req});
-                    "user/" ++ Method ->
-                        auth_handler:handle({post, Method, Req});
-                    _ ->
-                        header:send({error, Req})
-                end;
-            'DELETE' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({delete, ApiMethod, Req});
-                    _ ->
-                        header:send({error, Req})
-                end
-        end
+        dispatcher:dispatch(Req,DocRoot,[
+          {"",{controller,index},{action,index}},
+          {"user/",{controller,user},{action,index}},
+          {"user/signup",{controller,user},{action,signup}},
+          {"user/logout",{controller,user},{action,logout}}
+        ])
     catch
         Type:What ->
             Report = ["web request failed",
-                {path, Path},
+                {path, Req:get(path)},
                 {type, Type}, {what, What},
                 {trace, erlang:get_stacktrace()}],
             error_logger:error_report(Report),
@@ -73,3 +45,5 @@ loop(Req, DocRoot) ->
 
 get_option(Option, Options) ->
     {proplists:get_value(Option, Options), proplists:delete(Option, Options)}.
+
+
