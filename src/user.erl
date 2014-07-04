@@ -113,7 +113,7 @@ is_signup(UserKey) ->
             case Password of
                 <<"">> ->
                     false;
-                _ -> 
+                _ ->
                     true
             end;
         false ->

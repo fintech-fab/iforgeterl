@@ -21,7 +21,7 @@ start({user, User}) ->
     UserUuid = uuid:to_string(uuid:uuid4()),
     Key = "session:" ++ UserUuid,
     Attributes = ["user", User],
-    redis:hmset(Key,Attributes),
+    redis:hmset(Key, Attributes),
     UserUuid.
 
 

@@ -44,7 +44,7 @@ function send_notice() {
 
     time = time + (tp.hour  * 3600 + tp.minute * 60) * 1000;
 
-    $.post("/api/notice/",
+    $.post("/api/notice",
         {
             notice: $('#notice').val(),
             group: $('#receiver').val(),
