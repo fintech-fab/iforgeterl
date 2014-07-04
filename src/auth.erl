@@ -25,7 +25,6 @@ auth(Req) ->
                     void;
                 _ ->
                     [{user, User}] = Session,
-                    io:format("User: ~s ~n", [User]),
                     erlang:put(user, [User])
             end
     end.

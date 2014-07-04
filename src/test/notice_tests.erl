@@ -20,7 +20,7 @@ post_test_() ->
         HttpStatus,
         HttpHeaders,
         JsonResult
-    } = rest_handler:handle({post, "notice", request_stub}),
+    } = notice_resource:post(request_stub,{url_params,""}),
 
     {Struct, Result} = mochijson2:decode(JsonResult),
     BinaryUuid = proplists:get_value(<<"uuid">>, Result),

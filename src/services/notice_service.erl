@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 29. июн 2014 0:15
 %%%-------------------------------------------------------------------
--module(notice_controller).
+-module(notice_service).
 -author("topas").
 
 %% API
@@ -16,7 +16,7 @@ add([], _, _, _) ->
     {error, "Message required"};
 
 add(Text, Datetime, Author, Emails) ->
-    Group = group_controller:add(Author, Emails),
+    Group = group_service:add(Author, Emails),
     add(Text, Datetime, Group).
 
 add(_, _, {error, Message}) ->

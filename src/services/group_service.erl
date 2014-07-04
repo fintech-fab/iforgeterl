@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 29. июн 2014 3:46
 %%%-------------------------------------------------------------------
--module(group_controller).
+-module(group_service).
 -author("topas").
 
 %% API
