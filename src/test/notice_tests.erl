@@ -20,7 +20,7 @@ post_test_() ->
         HttpStatus,
         HttpHeaders,
         JsonResult
-    } = rest_handler:handle({post, "notice", request_stub}),
+    } = notice_resource:post(request_stub, {url_params, ""}),
 
     {Struct, Result} = mochijson2:decode(JsonResult),
     BinaryUuid = proplists:get_value(<<"uuid">>, Result),
@@ -54,7 +54,7 @@ post_test_() ->
         ?_assert(Message =:= <<"Example">>),
         ?_assert(GroupUuid =/= <<"">>),
         ?_assert(GroupUuid =/= []),
-        ?_assert(Group =:= [{author,<<"user:test@example.com">>},{name,<<"self">>}]),
+        ?_assert(Group =:= [{author, <<"user:test@example.com">>}, {name, <<"self">>}]),
         ?_assert(GroupName =:= <<"self">>),
         ?_assert(GroupAuthor =:= <<"user:test@example.com">>),
         ?_assert(is_list(Group) =:= true),

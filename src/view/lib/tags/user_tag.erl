@@ -33,7 +33,7 @@ mask_phone(_Phone) ->
 mask_email(Email) ->
     case re:run(Email, "^[\\w_]+@") of
         {match, _} ->
-            MaskEmail = re:replace(Email, "^(\\w{0,2})([\\w_\\d]+)([\\w\\d_]{1})@", "\\1***\\3@", [{return,list}]),
+            MaskEmail = re:replace(Email, "^(\\w{0,2})([\\w_\\d]+)([\\w\\d_]{1})@", "\\1***\\3@", [{return, list}]),
             MaskEmail;
         nomatch ->
             Email

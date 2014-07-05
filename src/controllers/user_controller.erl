@@ -1,27 +1,26 @@
 %%%-------------------------------------------------------------------
-%%% @author topas
+%%% @author petrov
 %%% @copyright (C) 2014, <COMPANY>
 %%% @doc
 %%%
 %%% @end
-%%% Created : 21. июн 2014 15:43
+%%% Created : 03. июл 2014 16:34
 %%%-------------------------------------------------------------------
--module(auth_handler).
--author("topas").
-
+-module(user_controller).
+-author("petrov").
+-compile(export_all).
 %% API
--export([handle/1]).
+-export([]).
 
 -import(render, [render_ok/2, render_ok/3]).
 
-handle({get, "", Req}) ->
-    render_ok(Req, auth_dtl);
+index(Req) ->
+    render_ok(Req, auth_dtl).
 
-handle({get, "signup/", Req}) ->
-    render_ok(Req, signup_dtl);
+auth(Req) ->
+    render_ok(Req, auth_dtl).
 
-handle({post, "auth", Req}) ->
-
+auth(post, Req) ->
     PostData = Req:parse_post(),
     Username = proplists:get_value("email", PostData),
     Password = proplists:get_value("password", PostData),
@@ -35,22 +34,16 @@ handle({post, "auth", Req}) ->
             header:redirect(Req, "/");
         false ->
             render_ok(Req, auth_dtl)
-    end;
+    end.
 
-handle({get, "logout", Req}) ->
+signup(Req) ->
+    render_ok(Req, signup_dtl).
+
+logout(Req) ->
     erlang:put(user, []),
     cookie:del("sess"),
 
     %% TODO
     %% Очистить сессию в redis
 
-    header:redirect(Req, "/");
-
-handle({_, _, Req}) ->
-    Req:respond({
-        200,
-        [{"Content-Type", "application/json"}],
-        mochijson2:encode([{<<"error">>, <<"unknown method">>}])
-    }).
-
-
+    header:redirect(Req, "/").

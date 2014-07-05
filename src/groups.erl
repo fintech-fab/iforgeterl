@@ -17,13 +17,13 @@ create({group, Name, Author}) ->
     Uuid = uuid:to_string(uuid:uuid4()),
     Key = "group:" ++ Uuid,
     Attributes = [name, Name, author, Author],
-    redis:hmset(Key,Attributes),
+    redis:hmset(Key, Attributes),
     Uuid.
 
 add({group, User}, Uuid) ->
     Key = "group:" ++ Uuid ++ ":members",
-    Attributes = ["user:"++User],
-    {ok, Value} = redis:sadd(Key,Attributes),
+    Attributes = ["user:" ++ User],
+    {ok, Value} = redis:sadd(Key, Attributes),
     Value.
 
 get({uuid, Uuid}) ->

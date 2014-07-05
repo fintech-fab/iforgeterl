@@ -13,15 +13,31 @@
 -export([send/1, redirect/2, json/2]).
 
 send({ok, Req}) ->
-
     Req:respond({200, getHeaders(),
         "Hello get !\n"});
+
 send({error, Req}) ->
     Req:respond({500, getHeaders(),
         "Internal service error !\n"});
+
+
+send({not_found, Req}) ->
+    Headers = getHeaders("application/json"),
+    Req:respond({404, Headers, response({error, list_to_binary("Not found")})});
+
+
 send({not_find, Req}) ->
     Req:respond({200, [{"Content-Type", "text/plain"}],
         "Hello get !\n"}).
+
+
+json({not_allowed, Req}) ->
+    Headers = getHeaders("application/json"),
+    Req:respond({405, Headers, response({error, list_to_binary("Method not allowed")})});
+
+json({not_found, Req}) ->
+    Headers = getHeaders("application/json"),
+    Req:respond({404, Headers, response({error, list_to_binary("Not found")})}).
 
 json({ok, Req}, Data) ->
     Headers = getHeaders("application/json"),
@@ -49,3 +65,7 @@ getHeaders(ContentType) ->
         _ ->
             lists:append(Headers, Cookies)
     end.
+
+
+response({error, Why}) ->
+    mochijson2:encode([{success, false}, {error, Why}]).

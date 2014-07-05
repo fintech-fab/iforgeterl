@@ -7,9 +7,6 @@
 
 -export([start/1, stop/0, loop/2]).
 
--import(render, [render_ok/4, render_ok/3, render_ok/2]).
-
-
 %% External API
 
 start(Options) ->
@@ -23,62 +20,18 @@ stop() ->
     mochiweb_http:stop(?MODULE).
 
 loop(Req, DocRoot) ->
-        "/" ++ Path = Req:get(path),
     try
-        auth:auth(Req),
         erlang:put(path, Req:get(path)),
+        auth:auth(Req),
 
-        case Req:get(method) of
-            'GET' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({get, ApiMethod, Req});
-                    "user/" ++ Method ->
-                        auth_handler:handle({get, Method, Req});
-                    "group/" ++ GroupPathUri ->
-
-%%                         GroupUuid = string:strip(GroupPathUri, right, "/"),
-                        GroupUuid = GroupPathUri,
-
-                        Group = groups:get({uuid, GroupUuid}),
-
-                        case Group of
-                            [] ->
-                                render_ok(Req, not_found_dtl);
-                            _ ->
-                                Members = groups:member({uuid, GroupUuid}),
-
-                                render_ok(Req, group_dtl, [{group, Group}, {members, Members}] )
-                        end;
-
-                    "" ->
-                        QueryStringData = Req:parse_qs(),
-                        Username = proplists:get_value("datetime", QueryStringData, iso_fmt:iso_8601_fmt(erlang:localtime())),
-                        render_ok(Req, send_form_dtl, [{datetime, Username}], [{header, notice_dtl}]);
-                    _ ->
-                        Req:serve_file(Path, DocRoot)
-                end;
-            'POST' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({post, ApiMethod, Req});
-                    "user/" ++ Method ->
-                        auth_handler:handle({post, Method, Req});
-                    _ ->
-                        header:send({error, Req})
-                end;
-            'DELETE' ->
-                case Path of
-                    "api/" ++ ApiMethod ->
-                        rest_handler:handle({delete, ApiMethod, Req});
-                    _ ->
-                        header:send({error, Req})
-                end
-        end
+        dispatcher:dispatch(Req, DocRoot, [
+            {"", {controller, "index"}, {action, "index"}},
+            {"group/([\\w\\d\\-]+)", {controller, "group"}, {action, "index"}}
+        ])
     catch
         Type:What ->
             Report = ["web request failed",
-                {path, Path},
+                {path, Req:get(path)},
                 {type, Type}, {what, What},
                 {trace, erlang:get_stacktrace()}],
             error_logger:error_report(Report),
@@ -90,3 +43,5 @@ loop(Req, DocRoot) ->
 
 get_option(Option, Options) ->
     {proplists:get_value(Option, Options), proplists:delete(Option, Options)}.
+
+
