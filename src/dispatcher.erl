@@ -36,49 +36,59 @@ dispatch("/" ++ Path, Req, DocRoot, HandledUrl) ->
 %% Запрос к апи
 dispatch({api, Path, Req}) ->
     L = string:tokens(Path, "/"),
-    RestParams = parce_url(L),
+    RestParams = parse_url(L),
     ControllerName = get_controller_name(RestParams),
     start_controller(ControllerName, get_method(Req:get(method)), RestParams, Req);
 
 %% Запрос к контроллеру
 dispatch({controller, Path, Req, DocRoot, HandledUrl}) ->
-    case Req:get(method) of
-        'GET' ->
-            case handle_user_url(Path, Req, HandledUrl) of
-                undefined ->
-                    Req:serve_file(Path, DocRoot);
-                {controller, Controller, action, Action} ->
-                    ControllerName = list_to_atom(atom_to_list(Controller) ++ "_controller"),
+    Method = Req:get(method),
+    case handle_user_url(Path, HandledUrl) of
+        undefined ->
+            Req:serve_file(Path, DocRoot);
 
-                    case module_exists(ControllerName) of
-                        true ->
-                            case erlang:function_exported(ControllerName, Action, 1) of
-                                true ->
-                                    ControllerName:Action(Req);
-                                false ->
-                                    header:send({not_found, Req})
-                            end;
-                        false ->
-                            header:send({not_found, Req})
+        {controller, ControllerName, action, ActionName} ->
 
-                    end
+            Controller = list_to_atom(ControllerName ++ "_controller"),
+            Action = list_to_atom(ActionName),
+            Method = Req:get(method),
 
+            case action_exists(Method, Controller, Action) of
+                true ->
+                    case Method of
+
+                        'POST' ->
+                            Controller:Action(post, Req);
+                        'GET' ->
+                            Controller:Action(Req)
+                    end;
+                false ->
+                    Req:serve_file(Path, DocRoot)
             end
     end.
 
-handle_user_url(_, _, [])
-    -> undefined;
+handle_user_url(Path, []) ->
+    UrlInfo = string:tokens(Path, "/"),
+    [Controller, Action] = get_info(UrlInfo),
+    {controller, Controller, action, Action};
 
-handle_user_url(Path1, Req, [{RegExp1, {controller, Controller}, {action, Action}} | T]) ->
+handle_user_url(Path1, [{RegExp1, {controller, HandleController}, {action, HandleAction}} | T]) ->
     RegExp = string:strip(RegExp1, both, $/),
     Path = string:strip(Path1, both, $/),
-    io:format("~p~n", [Path]),
     Match = re:run(Path, "^" ++ RegExp ++ "$", [global, {capture, all_but_first, list}]),
     case Match of
-        {match, [MatchList]} ->
+
+        {match, []} ->
+            UrlInfo = string:tokens(Path, "/"),
+            [Controller, Action] = get_info(UrlInfo),
+
             {controller, Controller, action, Action};
+
+        {match, [MatchList]} ->
+            {controller, HandleController, action, HandleAction};
+
         _ ->
-            handle_user_url(Path, Req, T)
+            handle_user_url(Path, T)
     end.
 
 get_controller_action(Ender) ->
@@ -86,6 +96,15 @@ get_controller_action(Ender) ->
         "" -> index;
         _ -> list_to_atom(Ender)
     end.
+
+get_info([]) ->
+    ["index", "index"];
+
+get_info([Controller]) ->
+    [Controller, "index"];
+
+get_info([Controller, Action | _]) ->
+    [Controller, Action].
 
 %% Запрос экшена к ресурсу
 start_controller(Controller, Method, Params, Req) ->
@@ -148,17 +167,17 @@ get_method(Method) ->
 get_controller_name(RestParams) ->
     list_to_atom(lists:foldr(fun({Name, _}, Acc) -> atom_to_list(Name) ++ "_" ++ Acc end, ?Resource, RestParams)).
 
-parce_url(L) ->
-    lists:reverse(parce_url(L, [])).
+parse_url(L) ->
+    lists:reverse(parse_url(L, [])).
 
-parce_url([], Acc) ->
+parse_url([], Acc) ->
     Acc;
 
-parce_url([K, V | L], Acc) ->
-    parce_url(L, [get_tuple(K, V)] ++ Acc);
+parse_url([K, V | L], Acc) ->
+    parse_url(L, [get_tuple(K, V)] ++ Acc);
 
-parce_url([K | []], Acc) ->
-    parce_url([], [get_tuple(K, undefined)] ++ Acc).
+parse_url([K | []], Acc) ->
+    parse_url([], [get_tuple(K, undefined)] ++ Acc).
 
 get_tuple(Attribute, Value) ->
     {list_to_atom(unicode:characters_to_list(Attribute)), Value}.
@@ -177,3 +196,16 @@ module_exists(Module) ->
         false ->
             false
     end.
+
+action_exists(Method, Controller, Action) ->
+    ModuleExists = module_exists(Controller),
+    action_exists(Method, ModuleExists, Controller, Action).
+
+action_exists(_, false, _, _) ->
+    false;
+
+action_exists('POST', true, Controller, Action) ->
+    erlang:function_exported(Controller, Action, 2);
+
+action_exists('GET', true, Controller, Action) ->
+    erlang:function_exported(Controller, Action, 1).

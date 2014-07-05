@@ -25,11 +25,8 @@ loop(Req, DocRoot) ->
         auth:auth(Req),
 
         dispatcher:dispatch(Req, DocRoot, [
-            {"", {controller, index}, {action, index}},
-            {"user/", {controller, user}, {action, index}},
-            {"user/signup", {controller, user}, {action, signup}},
-            {"user/logout", {controller, user}, {action, logout}},
-            {"group/[\\w\\d\\-]+", {controller, group}, {action, index}}
+            {"", {controller, "index"}, {action, "index"}},
+            {"group/([\\w\\d\\-]+)", {controller, "group"}, {action, "index"}}
         ])
     catch
         Type:What ->
